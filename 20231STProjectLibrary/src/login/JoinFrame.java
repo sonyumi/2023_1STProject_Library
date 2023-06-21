@@ -8,13 +8,14 @@ import javax.swing.*;
 public class JoinFrame extends WindowAdapter implements ActionListener {
 	private JFrame join;
 	private JLabel joinText, idText, pwText, nameText, gText, birthText, phoneText, emailText, idInfoText1, idInfoText2,
-			idInfoText3, birInfoText, phoneNumInfo;
+			idInfoText3, birInfoText, phoneNumInfo, infoDia;
 	private JTextField insId, insName, insPhone, insBirth, insEmail;
 	private JPasswordField insPw;
 	private ButtonGroup bg;
 	private JRadioButton[] gender;
-	private Button overlapId, joinBt;
+	private Button overlapId, joinBt, infoButton;
 	private Font font, font1, font2, font3;
+	private Dialog dia;
 	private String sGender[] = { "남", "여" };
 	private MemberDAO dao;
 	private JoinDAO dao1;
@@ -158,10 +159,28 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		join.add(birInfoText);
 		birInfoText.setBounds(0, 0, 0, 0);
 
-		join.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		join.setVisible(true);
 	}
 
+	public void JoinDialog(String s) {
+		dia = new Dialog(join, "Success", true);
+		infoDia = new JLabel();
+		infoButton = new Button("확인");
+		dia.addWindowListener(this);
+		dia.add(infoDia);
+		dia.add(infoButton);
+		dia.setLayout(null);
+		dia.setSize(null);
+		dia.setBounds(600, 300, 300, 150);
+		infoDia.setFont(font3);
+		infoButton.setBounds(125, 102, 50, 25);
+		infoDia.setText(s);
+		infoButton.addActionListener(this);
+		infoDia.setBounds(55, 50, 185, 30);
+
+	}
+	
+		
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String tfId = insId.getText();
@@ -197,17 +216,20 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				dao1.list(insId.getText(), tfpw, insName.getText(), rbge, insBirth.getText(), insPhone.getText(),
 						insEmail.getText());
 			}
+		}
+		if (e.getActionCommand().equals("확인")) {
+			dia.dispose();
 			join.dispose();
 		}
 	}
 
 	public void windowClosing(WindowEvent e) {
-
+		if (e.getComponent() == dia) {
+			dia.dispose();
+			join.dispose();
+		}
+		if (e.getComponent() == join) {
+			join.dispose();
+		}
 	}
-
-	public static void main(String[] args) {
-		JoinFrame jf = new JoinFrame();
-		jf.setJoinFrame();
-	}
-
 }

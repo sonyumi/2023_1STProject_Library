@@ -1,10 +1,23 @@
 package login;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Button;
+import java.awt.Checkbox;
+import java.awt.Dialog;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import javax.swing.*;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import mainFrame.MainFrame;
 
 public class LoginFrame extends WindowAdapter implements ActionListener {
 	private JFrame login;
@@ -17,6 +30,7 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 	private JLabel mainTitle, idText, pwText, imgArea, infoDia;
 	private Font font1, font2, font3;
 	private Dialog dia;
+	public static String ID, PW;
 	private String img = "..\\20231STProjectLibrary\\img\\loginimg.png";
 	static String icon = "..\\20231STProjectLibrary\\img\\mainicon.png";
 
@@ -32,7 +46,7 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		grid2 = new JButton();
 		idFind = new JButton("아이디찾기");
 		pwFind = new JButton("비밀번호찾기");
-		mainTitle = new JLabel("도서관 통합 관리 시스템");
+		mainTitle = new JLabel("도서관 대출/반납 시스템");
 		idText = new JLabel("ID");
 		pwText = new JLabel("PW");
 		imgArea = new JLabel();
@@ -107,12 +121,14 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		pwFind.addActionListener(this);
 
 		login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 	}
-	public void viewLoginFrame() {
+
+	public void getLoginFrame() {
 		setLoginFrame();
 		login.setVisible(true);
 	}
+
 	public void LoginDialog(String s) {
 		dia = new Dialog(login, "Info", true);
 		dia.addWindowListener(this);
@@ -130,21 +146,19 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		dia.setVisible(true);
 
 	}
-	
-	public void setJoin() {
-		
-	}
 
 	public void windowClosing(WindowEvent e) {
 		if (e.getComponent() == dia || e.getComponent() == infoButton) {
 			dia.dispose();
+		}
+		if (e.getComponent() == login) {
+			login.dispose();
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Login")) {
-
 			String tfid = insId.getText();
 			String tfpw = "";
 			char[] inPw = insPw.getPassword();
@@ -165,18 +179,23 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 
 			String id = null;
 			String pw = null;
-
+			MemberVo data = null;
 			for (int i = 0; i < list.size(); i++) {
-				MemberVo data = (MemberVo) list.get(i);
+				data = (MemberVo) list.get(i);
 				id = data.getId();
 				pw = data.getPw();
 
 				System.out.println(id);
 				System.out.println(pw);
 			}
+
 			if (tfid.equals(id)) {
 				if (tfpw.equals(pw)) {
-					LoginDialog("성공");
+					// LoginDialog("성공");
+					this.login.dispose();
+					MainFrame mf = new MainFrame(data);
+					mf.getMainFrame();
+
 				} else {
 					LoginDialog("비밀번호를 다시 입력해주세요.");
 				}
@@ -189,11 +208,24 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		if (e.getActionCommand().equals("확인")) {
 			dia.dispose();
 		}
+
+		if (e.getActionCommand().equals("회원가입")) {
+			JoinFrame jf = new JoinFrame();
+			jf.setJoinFrame();
+		}
+		if (e.getActionCommand().equals("아이디찾기")) {
+			IdFind idf = new IdFind();
+			idf.setIdFine();
+		}
+		if (e.getActionCommand().equals("비밀번호찾기")) {
+			PasswordFind pf = new PasswordFind();
+			pf.setPasswordFine();
+		}
 	}
 
 	public static void main(String[] args) {
 		LoginFrame login = new LoginFrame();
-		login.viewLoginFrame();
+		login.getLoginFrame();
 	}
 
 }

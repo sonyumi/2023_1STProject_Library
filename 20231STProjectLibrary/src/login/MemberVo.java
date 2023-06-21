@@ -11,6 +11,11 @@ public class MemberVo {
 		this.user_id=id; // 입력받은 값을 대입
 		this.user_pw=pw;
 	}
+	public MemberVo(String name,String birth,String num) {
+		this.name=name;
+		this.birth=birth;
+		this.number=num;
+	}
 	//아이디, 비밀번호를 입력받는 생성자
 	public MemberVo(String id,String pw,String name,String gender,String birth,String number, String email) { 
 		this.user_id=id; // 입력받은 값을 대입
@@ -30,12 +35,11 @@ public class MemberVo {
 		this.number=number;
 	}
 	
-	//유저 아이디를 내보내기 위한 메소드
+
 	public String getId() {
 		return user_id;
 	}
 	
-	//유저 비밀번호를 내보내기 위한 메소드
 	public String getPw() {
 		return user_pw;
 	}

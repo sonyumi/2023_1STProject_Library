@@ -37,6 +37,83 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 	}
+	
+
+	// 리스트에 불러온 값을 차례대로 저장 (리턴타입 : list)
+	public ArrayList<MemberVo> list(String id,String name,String num) {
+		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
+		//
+		try {
+			connDB(); // DB에 연결 하도록 만든 메소드
+			String query = "SELECT * FROM g_user";
+
+			if (id != null) {
+				// 쿼리에 조건을 더해줌
+				query += " where id='"+id+"' and name='"+name+"' and p_number='"+num+"'";
+			}
+			System.out.println("SQL : " + query);
+			rs = stmt.executeQuery(query);
+			rs.last(); // 커서를 마지막으로 이동
+			System.out.println("rs.getRow() : " + rs.getRow());
+			// rs.getRow() == 현재 커서가 가리키고 있는 row 번호 리턴
+
+			// 커서 번호가 0인경우 (테이블에 조회할 레코드가 없을경우)
+			if (rs.getRow() == 0) {
+				// 입력된 아이디 값과 일치하는 데이터가 없을때(로그인실패)
+			} else {
+				System.out.println(rs.getRow()); // 현재 커서 값 출력
+				rs.previous(); // 커서를 이전으로 돌리기
+				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
+					String sId = rs.getString("id"); // 현재 커서에 있는 아이디값 저장
+					String sPw = rs.getString("pw"); // 현재 커서에 있는 비밀번호값 저장
+					MemberVo data = new MemberVo(sId, sPw); // MemberVo(값 불러오는 클래스) 타입의
+																						// 변수생성(쿼리문을 저장하기위함)
+					list.add(data);// 리스트에 값 저장
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	// 리스트에 불러온 값을 차례대로 저장 (리턴타입 : list)
+	public ArrayList<MemberVo> list(String name,String birth,String num, String table) {
+		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
+		//
+		try {
+			connDB(); // DB에 연결 하도록 만든 메소드
+			String query = "SELECT * FROM " + table;
+
+			if (name != null) {
+				// 쿼리에 조건을 더해줌
+				query += " where name='"+name+"' and birth='"+birth+"' and p_number='"+num+"'";
+			}
+			System.out.println("SQL : " + query);
+			rs = stmt.executeQuery(query);
+			rs.last(); // 커서를 마지막으로 이동
+			System.out.println("rs.getRow() : " + rs.getRow());
+			// rs.getRow() == 현재 커서가 가리키고 있는 row 번호 리턴
+
+			// 커서 번호가 0인경우 (테이블에 조회할 레코드가 없을경우)
+			if (rs.getRow() == 0) {
+				// 입력된 아이디 값과 일치하는 데이터가 없을때(로그인실패)
+			} else {
+				System.out.println(rs.getRow()); // 현재 커서 값 출력
+				rs.previous(); // 커서를 이전으로 돌리기
+				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
+					String sId = rs.getString("id"); // 현재 커서에 있는 아이디값 저장
+					String sPw = rs.getString("pw"); // 현재 커서에 있는 비밀번호값 저장
+					MemberVo data = new MemberVo(sId, sPw); // MemberVo(값 불러오는 클래스) 타입의
+																						// 변수생성(쿼리문을 저장하기위함)
+					list.add(data);// 리스트에 값 저장
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	// 리스트에 불러온 값을 차례대로 저장 (리턴타입 : list)
 	public ArrayList<MemberVo> list(String id, String table) {
@@ -65,7 +142,12 @@ public class MemberDAO {
 				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
 					String sId = rs.getString("id"); // 현재 커서에 있는 아이디값 저장
 					String sPw = rs.getString("pw"); // 현재 커서에 있는 비밀번호값 저장
-					MemberVo data = new MemberVo(sId, sPw); // MemberVo(값 불러오는 클래스) 타입의
+					String sName = rs.getString("name");
+					String sGender = rs.getString("gender");
+					String sBirth = rs.getString("birth");
+					String sNumber = rs.getString("p_number");
+					String sEmail = rs.getString("email");
+					MemberVo data = new MemberVo(sId, sPw,sName,sGender,sBirth,sNumber,sEmail); // MemberVo(값 불러오는 클래스) 타입의
 																						// 변수생성(쿼리문을 저장하기위함)
 					list.add(data);// 리스트에 값 저장
 				}
