@@ -1,7 +1,7 @@
 package mainFrame;
 
 public class BookVo {
-	private String code, name, writer, publisher, position, image, id, rental, days, ret;
+	private String code, name, writer, publisher, position, image, id, rental, days, ret, bReturn;
 
 	// 생성자
 	public BookVo() {
@@ -34,7 +34,7 @@ public class BookVo {
 	}
 
 	public BookVo(String code, String name, String writer, String publisher, String position, String image) {
-		this.code = code; // 입력받은 값을 대입
+		this.code = code;
 		this.name = name;
 		this.writer = writer;
 		this.publisher = publisher;
@@ -42,11 +42,24 @@ public class BookVo {
 		this.image = image;
 	}
 
-	public BookVo(String id, String code, String name, String writer, String rental, String days, String ret) {
+	public BookVo(String code, String name, String writer, String publisher, String position, String bReturn,
+			String image) {
+		this.code = code;
+		this.name = name;
+		this.writer = writer;
+		this.publisher = publisher;
+		this.position = position;
+		this.bReturn = bReturn;
+		this.image = image;
+	}
+
+	public BookVo(String id, String code, String name, String writer, String publisher, String rental, String days,
+			String ret) {
 		this.id = id;
 		this.code = code;
 		this.name = name;
 		this.writer = writer;
+		this.publisher = publisher;
 		this.rental = rental;
 		this.days = days;
 		this.ret = ret;
@@ -85,6 +98,15 @@ public class BookVo {
 	}
 
 	public String getReturn() {
+		return ret;
+	}
+	public String getbReturn() {
+		return bReturn;
+	}
+	public String getId() {
+		return id;
+	}
+	public String getret() {
 		return ret;
 	}
 }

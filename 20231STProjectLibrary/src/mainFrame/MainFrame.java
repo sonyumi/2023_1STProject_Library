@@ -1,5 +1,7 @@
 package mainFrame;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -22,15 +24,17 @@ public class MainFrame extends WindowAdapter {
 	}
 	private void setFrameTab() {
 		main = new JFrame("도서 대출 반납 시스템");
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Dimension screenSize = tk.getScreenSize();
+		main.setLocation(screenSize.width/2-300, screenSize.height/2-300);
 		tab=new JTabbedPane(JTabbedPane.TOP);
 		MainMenu m1 = new MainMenu(userInfo);
 		RentalReturnMenu m2 = new RentalReturnMenu(userInfo);
-		main.setLocationRelativeTo(null);
 		main.setResizable(false);
 		main.add(tab);
 		main.addWindowListener(this);
 		tab.addTab("Main",m1);
-		tab.addTab("대여/반납", m2);
+		tab.addTab("도서검색 및 대여/반납", m2);
 		main.setSize(600,600);
 
 		System.out.println(userInfo.getId());
