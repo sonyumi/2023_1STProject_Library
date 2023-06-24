@@ -163,14 +163,13 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 	}
 
 	public void JoinDialog(String s) {
-		dia = new Dialog(join, "Success", true);
+		dia = new Dialog(join, "Info", true);
 		infoDia = new JLabel();
 		infoButton = new Button("확인");
 		dia.addWindowListener(this);
 		dia.add(infoDia);
 		dia.add(infoButton);
 		dia.setLayout(null);
-		dia.setSize(null);
 		dia.setBounds(600, 300, 300, 150);
 		infoDia.setFont(font3);
 		infoButton.setBounds(125, 102, 50, 25);
@@ -215,6 +214,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				System.out.println(rbge);
 				dao1.list(insId.getText(), tfpw, insName.getText(), rbge, insBirth.getText(), insPhone.getText(),
 						insEmail.getText());
+				JoinDialog("회원가입이 완료되었습니다.");
 			}
 		}
 		if (e.getActionCommand().equals("확인")) {

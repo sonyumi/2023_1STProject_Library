@@ -105,7 +105,7 @@ public class IdFind extends WindowAdapter implements ActionListener {
 		dia.setVisible(true);
 	}
 
-	public void findFailDialog() {
+	public void findFailDialog(String s) {
 		dia = new Dialog(idFind, "Info", true);
 		infoId = new JLabel();
 		infoDia1 = new JLabel();
@@ -118,7 +118,7 @@ public class IdFind extends WindowAdapter implements ActionListener {
 		dia.addWindowListener(this);
 		dia.setLayout(null);
 		dia.setBounds(600, 300, 300, 150);
-		infoDia2.setText("회원정보를 찾을 수 없습니다.");
+		infoDia2.setText(s);
 		infoDia2.setBounds(45, 55, 200, 30);
 		infoDia2.setFont(font2);
 
@@ -149,8 +149,14 @@ public class IdFind extends WindowAdapter implements ActionListener {
 			if (list.size() != 0) {
 				MemberVo data = (MemberVo) list.get(0);
 				findDialog(data.getId());
+			} else if (name.isEmpty()) {
+				findFailDialog("이름을 입력해주세요.");
+			} else if(birth.isEmpty()) {
+				findFailDialog("생년월일을 입력해주세요.");
+			} else if(num.isEmpty()) {
+				findFailDialog("전화번호를 입력해주세요.");
 			} else {
-				findFailDialog();//예외처리필요
+				findFailDialog("회원정보를 찾을 수 없습니다.");
 			}
 
 		}

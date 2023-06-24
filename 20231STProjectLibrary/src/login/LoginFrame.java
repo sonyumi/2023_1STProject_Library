@@ -32,7 +32,7 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 	private Dialog dia;
 	public static String ID, PW;
 	private String img = "..\\20231STProjectLibrary\\img\\loginimg.png";
-	static String icon = "..\\20231STProjectLibrary\\img\\mainicon.png";
+	public static String icon = "..\\20231STProjectLibrary\\img\\mainicon.png";
 
 	public void setLoginFrame() {
 		dao = new MemberDAO();

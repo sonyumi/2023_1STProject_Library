@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
@@ -16,9 +17,6 @@ public class MainFrame extends WindowAdapter {
 	private JTabbedPane tab;
 	private MemberVo userInfo;
 	
-	public MainFrame(){
-		
-	}
 	public MainFrame(MemberVo userInfo){
 		this.userInfo = userInfo;
 	}
@@ -26,6 +24,7 @@ public class MainFrame extends WindowAdapter {
 		main = new JFrame("도서 대출 반납 시스템");
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
+		main.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
 		main.setLocation(screenSize.width/2-300, screenSize.height/2-300);
 		tab=new JTabbedPane(JTabbedPane.TOP);
 		MainMenu m1 = new MainMenu(userInfo);

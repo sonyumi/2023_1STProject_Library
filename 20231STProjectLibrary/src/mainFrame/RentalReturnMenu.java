@@ -4,13 +4,22 @@ import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,10 +29,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
+import login.LoginFrame;
 import login.MemberVo;
 
 @SuppressWarnings("serial")
-public class RentalReturnMenu extends JPanel implements ActionListener ,MouseListener{
+public class RentalReturnMenu extends JPanel implements ActionListener, MouseListener {
 
 	private JTable tb1 = new JTable();
 	private JTable tb2 = new JTable();
@@ -35,12 +45,13 @@ public class RentalReturnMenu extends JPanel implements ActionListener ,MouseLis
 	private MemberVo userInfo;
 	private JTextField inpSearch, inpbookCode;
 	private Button searchBt, rentalBt, returnBt;
-	private JLabel search, info, voidLabel, borderLine1, borderLine2;
+	private JLabel search, info, voidLabel, borderLine1, borderLine2, infoImg, infoName, infoPosition;
 	private CheckboxGroup searchGroup;
 	private Checkbox bookcode, bookname, bookwriter, publisher;
 	private Font font1, font2;
 	private LineBorder bb = new LineBorder(Color.black, 1, true);
-	private ArrayList<String> bookdata = new ArrayList<String>();
+	private ArrayList<BookVo> list1;
+	private JFrame infoFrame = new JFrame("BookInfo");
 
 	RentalReturnMenu(MemberVo userInfo) {
 		this.userInfo = userInfo;
@@ -95,7 +106,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener ,MouseLis
 		tb1.setBounds(35, 80, 500, 195);
 		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tb1.addMouseListener(this);
-		ArrayList<BookVo> list1 = dao.list(inp, code);
+		list1 = dao.list(inp, code);
 		col = new DefaultTableModel(field1, 0);
 //		JScrollPane listScroll1 = new JScrollPane(tb1);
 		for (BookVo vo : list1) {
@@ -111,10 +122,10 @@ public class RentalReturnMenu extends JPanel implements ActionListener ,MouseLis
 	public void setSearchTable2(String inp, int code) {
 		String[] field1 = { "책코드", "책이름", "저자", "출판사", "위치", "대여가능여부" };
 		tb1.setSize(200, 200);
-		
+
 		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tb1.addMouseListener(this);
-		ArrayList<BookVo> list1 = dao.list(inp, code);
+		list1 = dao.list(inp, code);
 		col = new DefaultTableModel(field1, 0);
 		add(listScroll1);
 		listScroll1.setBounds(35, 80, 500, 195);
@@ -124,6 +135,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener ,MouseLis
 			col.addRow(row);
 		}
 		tb1.setModel(col);
+
 	}
 
 	public void returnPanel() {
@@ -167,6 +179,36 @@ public class RentalReturnMenu extends JPanel implements ActionListener ,MouseLis
 
 	}
 
+	public void bookInfo(int i) {
+		infoFrame = new JFrame("BookInfo");
+		infoImg = new JLabel("");
+		ImageIcon img = new ImageIcon(list1.get(i).getImgLink());
+		Image icon = img.getImage();
+		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
+		infoImg.setIcon(new ImageIcon(changeImg));
+		infoName = new JLabel("");
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Dimension screenSize = tk.getScreenSize();
+		infoFrame.setLocation(screenSize.width / 2 + 280, screenSize.height / 2 - 300);
+		infoFrame.setSize(200, 300);
+		infoFrame.add(infoImg);
+		infoFrame.add(infoName);
+		
+		infoFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				if (e.getComponent() == infoFrame) {
+					infoFrame.dispose();
+				}
+			}
+		});
+		
+		infoImg.setBounds(50, 30, 125, 190);
+		
+		infoName.setText(list1.get(i).getName());
+		infoName.setBounds(300, 500, 100, 15);
+		infoFrame.setVisible(true);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String seachText = inpSearch.getText();
@@ -184,33 +226,35 @@ public class RentalReturnMenu extends JPanel implements ActionListener ,MouseLis
 			tb1.setVisible(true);
 		}
 	}
+
 	public void mouseClicked(MouseEvent e) {
 		System.out.println(tb1.getSelectedRow() + ":" + tb1.getSelectedColumn());
 		System.out.println(tb1.getValueAt(tb1.getSelectedRow(), tb1.getSelectedColumn()));
+
+		System.out.println(list1.get(tb1.getSelectedRow()).getImgLink());
+		int rowValue = tb1.getSelectedRow();
+		if (infoFrame.isShowing()) {
+			infoFrame.dispose();
+			bookInfo(rowValue);
+		} else {
+			bookInfo(rowValue);
+		}
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
