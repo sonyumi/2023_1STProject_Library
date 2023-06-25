@@ -17,7 +17,8 @@ import login.MemberVo;
 
 @SuppressWarnings("serial")
 public class MainMenu extends JPanel implements ActionListener {
-	private JLabel userText, bestBookText, bookFrame, book1,book1Text1, book2,book2Text1, book3,book3Text1, book4,book4Text1, book5,book5Text1, book6,book6Text1, grid1, grid2, grid3;
+	private JLabel userText, bestBookText, bookFrame, book1, book1Text1, book2, book2Text1, book3, book3Text1, book4,
+			book4Text1, book5, book5Text1, book6, book6Text1, grid1, grid2, grid3;
 	private Button privious, next;
 	private BookDAO dao;
 	private ArrayList<String> codeList;
@@ -129,9 +130,9 @@ public class MainMenu extends JPanel implements ActionListener {
 		imgList = new ArrayList<String>();
 		wirterList = new ArrayList<String>();
 		publisherList = new ArrayList<String>();
-		
+
 		BookVo data;
-		
+
 		// 베스트셀러 상위 6위 책 코드값, 이미지값
 		for (int i = 0; i < 6; i++) {
 			data = (BookVo) list.get(i);
@@ -167,7 +168,8 @@ public class MainMenu extends JPanel implements ActionListener {
 	public void book1() {
 		setBookcode();
 		book1 = new JLabel();
-		book1Text1=new JLabel("<html><body style='text-align:center;'>1. "+nameList.get(0)+"<br />"+codeList.get(0));
+		book1Text1 = new JLabel(
+				"<html><body style='text-align:center;'>1. " + nameList.get(0));
 		add(book1);
 		add(book1Text1);
 		book1Text1.setBounds(80, 350, 120, 50);
@@ -176,16 +178,16 @@ public class MainMenu extends JPanel implements ActionListener {
 		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
 		book1.setIcon(new ImageIcon(changeImg));
 		book1.setBounds(70, 150, 125, 190);
-		
+
 	}
 
 	public void book2() {
 		setBookcode();
 		book2 = new JLabel();
-		book2Text1=new JLabel();
+		book2Text1 = new JLabel();
 		add(book2);
 		add(book2Text1);
-		book2Text1.setText("<html><body style='text-align:center;'>2. "+nameList.get(1)+"<br />"+codeList.get(1));
+		book2Text1.setText("<html><body style='text-align:center;'>2. " + nameList.get(1));
 		book2Text1.setBounds(240, 350, 120, 50);
 		ImageIcon img = new ImageIcon(imgList.get(1));
 		Image icon = img.getImage();
@@ -197,11 +199,11 @@ public class MainMenu extends JPanel implements ActionListener {
 	public void book3() {
 		setBookcode();
 		book3 = new JLabel();
-		book3Text1=new JLabel();
+		book3Text1 = new JLabel();
 		add(book3);
 		add(book3Text1);
 		book3Text1.setBounds(400, 350, 120, 50);
-		book3Text1.setText("<html><body style='text-align:center;'>3. "+nameList.get(2)+"<br />"+codeList.get(2));
+		book3Text1.setText("<html><body style='text-align:center;'>3. " + nameList.get(2));
 		ImageIcon img = new ImageIcon(imgList.get(2));
 		Image icon = img.getImage();
 		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
@@ -212,11 +214,11 @@ public class MainMenu extends JPanel implements ActionListener {
 	public void book4() {
 		setBookcode();
 		book4 = new JLabel();
-		book4Text1=new JLabel();
+		book4Text1 = new JLabel();
 		add(book4);
 		add(book4Text1);
 		book4Text1.setBounds(80, 350, 120, 50);
-		book4Text1.setText("<html><body style='text-align:center;'>4. "+nameList.get(3)+"<br />"+codeList.get(3));
+		book4Text1.setText("<html><body style='text-align:center;'>4. " + nameList.get(3));
 		ImageIcon img = new ImageIcon(imgList.get(3));
 		Image icon = img.getImage();
 		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
@@ -227,11 +229,11 @@ public class MainMenu extends JPanel implements ActionListener {
 	public void book5() {
 		setBookcode();
 		book5 = new JLabel();
-		book5Text1=new JLabel();
+		book5Text1 = new JLabel();
 		add(book5);
 		add(book5Text1);
 		book5Text1.setBounds(240, 350, 120, 50);
-		book5Text1.setText("<html><body style='text-align:center;'>5. "+nameList.get(4)+"<br />"+codeList.get(4));
+		book5Text1.setText("<html><body style='text-align:center;'>5. " + nameList.get(4));
 		ImageIcon img = new ImageIcon(imgList.get(4));
 		Image icon = img.getImage();
 		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
@@ -242,11 +244,11 @@ public class MainMenu extends JPanel implements ActionListener {
 	public void book6() {
 		setBookcode();
 		book6 = new JLabel();
-		book6Text1=new JLabel();
+		book6Text1 = new JLabel();
 		add(book6);
 		add(book6Text1);
 		book6Text1.setBounds(400, 350, 120, 50);
-		book6Text1.setText("<html><body style='text-align:center;'>6. "+nameList.get(5)+"<br />"+codeList.get(5));
+		book6Text1.setText("<html><body style='text-align:center;'>6. " + nameList.get(5));
 		ImageIcon img = new ImageIcon(imgList.get(5));
 		Image icon = img.getImage();
 		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);

@@ -53,6 +53,64 @@ public class UserBookDAO extends MemberDAO {
 		return list;
 	}
 
-	
+	public String getReturnValue(String code, int i, String id) {
+		String value = null;
+		//
+		try {
+			connDB(); // DB에 연결 하도록 만든 메소드
+			String query = "SELECT * FROM ";
+			int row1 = 0;
+			int row2 = 0;
+
+			// 대출실행 쿼리
+			if (code != null && i == 0) {
+				query += "(SELECT rental_code,BOOK_CODE ,rental_user,rental_date,rental_days,return_date,rank() over(PARTITION BY book_code ORDER BY RENTAL_CODE desc) a\r\n"
+						+ "FROM RENTAL r) \r\n"
+						+ "WHERE a = 1 AND rental_date IS NOT NULL AND return_date IS NOT NULL AND book_code='" + code
+						+ "'";
+				rs = stmt.executeQuery(query);
+				rs.last();
+				row1 = rs.getRow();
+				System.out.println("SQL1 : " + query);
+				query = "SELECT *\r\n" + "FROM RENTAL r ,BOOKLIST b \r\n"
+						+ "WHERE b.book_code(+) = r.book_code AND b.BOOK_CODE ='" + code + "'";
+				rs = stmt.executeQuery(query);
+				rs.last();
+				row2 = rs.getRow();
+				System.out.println("SQL2-1 : " + query);
+
+				if ((row1 != 0 && row2 != 0) || (row1 == 0 && row2 == 0)) {
+					query = "INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)\r\n"
+							+ "VALUES (num1.nextval,'" + code + "','" + id + "',sysdate,'14')";
+					rs = stmt.executeQuery(query);
+					System.out.println("SQL3 : " + query);
+					value = "성공";
+				} else {
+					value = "없음";
+				}
+			}
+
+			// 반납 실행 쿼리
+			if (code != null && i == 1) {
+				query += "RENTAL\r\n" + "WHERE BOOK_CODE ='" + code
+						+ "' AND RENTAL_DATE IS not NULL AND RETURN_DATE IS NULL" + " AND rental_user = '" + id + "'";
+				System.out.println(query);
+				rs = stmt.executeQuery(query);
+				rs.last();
+
+				if (rs.getRow() != 0) {
+					query = "UPDATE rental SET return_date=SYSDATE \r\n" + "WHERE book_code='" + code + "'";
+					rs = stmt.executeQuery(query);
+					value = "성공";
+				} else {
+					value = "없음";
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// System.out.println(value);
+		return value;
+	}
 
 }
