@@ -178,8 +178,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		infoDia.setBounds(55, 50, 185, 30);
 
 	}
-	
-		
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String tfId = insId.getText();
@@ -198,7 +197,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				}
 			}
 		}
-
+		// 회원가입 조건 줘야함 내일6/27 수정 예정
 		if (e.getActionCommand().equals("회원가입")) {
 			if (insId.getText().length() != 0) {
 				String tfpw = "";

@@ -77,6 +77,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		inpSearch = new JTextField();
 		searchBt = new Button("검색");
 		font1 = new Font("고딕", Font.BOLD, 15);
+		
 		add(inpSearch);
 		add(searchBt);
 		inpSearch.setBounds(105, 35, 150, 30);
@@ -188,14 +189,12 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		String[] field2 = { "책번호", "책이름", "저자", "출판사", "대여일", "대여일수" };
 		col = new DefaultTableModel(field2, 0);
 		tb2.setSize(200, 200);
-
 		for (BookVo vo : list) {
 			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getRental(),
 					vo.getDays() };
 			col.addRow(row);
 		}
 		tb2.setModel(col);
-
 		add(listScroll2);
 		listScroll2.setSize(480, 125);
 		listScroll2.setLocation(40, 375);
@@ -348,7 +347,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 					} else if (value.equals("없음")) {
 						// 북 코드값이 잘못되엇습니다 창 띄우기
 						System.out.println("북 코드값 에러");
-						bookRentalDialog("반납처리가 안 된 책입니다.");
+						bookRentalDialog("대출처리가 안 된 책입니다.");
 					} else {
 						System.out.println("반납실패");
 						bookRentalDialog("반납에 실패하였습니다.");

@@ -33,4 +33,29 @@ public class JoinDAO extends MemberDAO {
 		return list;
 	}
 
+	public String userInfoRevise(String id, String pw, String gender, String birth, String number, String email) {
+		String value = null;
+		id = id.trim();
+		pw = pw.trim();
+		birth = birth.trim();
+		number = number.trim();
+		email = email.trim();
+		try {
+			connDB(); // DB에 연결 하도록 만든 메소드
+			String query = "UPDATE g_user SET pw='" + pw + "',  gender='" + gender + "', birth='" + birth
+					+ "', p_number='" + number + "', email='" + email + "'";
+
+			if (id != null) {
+				// 쿼리에 조건을 더해줌
+				query += " WHERE id='" + id + "'";
+				value = "완료";
+			}
+			System.out.println("SQL : " + query);
+			System.out.println(value);
+			super.rs = super.stmt.executeQuery(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
 }

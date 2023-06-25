@@ -16,37 +16,46 @@ public class MainFrame extends WindowAdapter {
 	private JFrame main;
 	private JTabbedPane tab;
 	private MemberVo userInfo;
-	
-	public MainFrame(MemberVo userInfo){
+
+	public MainFrame(MemberVo userInfo) {
 		this.userInfo = userInfo;
 	}
+
 	private void setFrameTab() {
 		main = new JFrame("도서 대출 반납 시스템");
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
-		main.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
-		main.setLocation(screenSize.width/2-300, screenSize.height/2-300);
-		tab=new JTabbedPane(JTabbedPane.TOP);
+		tab = new JTabbedPane(JTabbedPane.TOP);
 		MainMenu m1 = new MainMenu(userInfo);
 		RentalReturnMenu m2 = new RentalReturnMenu(userInfo);
+		UserInfoMenu m3 = new UserInfoMenu(userInfo);
+		
+		main.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
+		main.setLocation(screenSize.width / 2 - 300, screenSize.height / 2 - 300);
+
 		main.setResizable(false);
 		main.add(tab);
 		main.addWindowListener(this);
-		tab.addTab("Main",m1);
+		main.setSize(600, 600);
+		
+
+		tab.addTab("Main", m1);
 		tab.addTab("도서검색 및 대여/반납", m2);
-		main.setSize(600,600);
+		tab.addTab("회원정보", m3);
 
 		System.out.println(userInfo.getId());
 		System.out.println(userInfo.getName());
-		
+
 	}
+
 	public void windowClosing(WindowEvent e) {
-		if(e.getComponent()==main) {
+		if (e.getComponent() == main) {
 			LoginFrame login = new LoginFrame();
 			login.getLoginFrame();
 			main.dispose();
 		}
 	}
+
 	public void getMainFrame() {
 		setFrameTab();
 		main.setVisible(true);
