@@ -92,7 +92,7 @@ public class BookDAO extends MemberDAO {
 				// 입력된 아이디 값과 일치하는 데이터가 없을때(로그인실패)
 			} else {
 				System.out.println(rs.getRow()); // 현재 커서 값 출력
-				rs.beforeFirst(); // 커서를 이전으로 돌리기
+				rs.beforeFirst(); // 커서를 0번으로 돌리기
 				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
 					String bCode = rs.getString("book_code"); // 북코드 저장
 					String bName = rs.getString("book_name"); // 책이름
@@ -101,14 +101,6 @@ public class BookDAO extends MemberDAO {
 					String bPosition = rs.getString("position");
 					String bReturn = rs.getString("대여가능여부");
 					String bImg = rs.getString("image");
-
-//					System.out.println(bCode);
-//					System.out.println(bName);
-//					System.out.println(bWriter);
-//					System.out.println(bPublisher);
-//					System.out.println(bPosition);
-//					System.out.println(bReturn);
-//					System.out.println(bImg);
 
 					BookVo data = new BookVo(bCode, bName, bWriter, bPublisher, bPosition, bReturn, bImg); // BookVo(값
 																											// 불러오는 클래스)
@@ -170,7 +162,7 @@ public class BookDAO extends MemberDAO {
 
 			// 커서 번호가 0인경우 (테이블에 조회할 레코드가 없을경우)
 			if (rs.getRow() == 0) {
-				// 입력된 아이디 값과 일치하는 데이터가 없을때(로그인실패)
+				// 입력된 아이디 값과 일치하는 데이터가 없을때
 			} else {
 				System.out.println(rs.getRow()); // 현재 커서 값 출력
 				rs.previous(); // 커서를 0번으로 돌리기 (0번부터 조회)

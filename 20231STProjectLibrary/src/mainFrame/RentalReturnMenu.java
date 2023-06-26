@@ -91,6 +91,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		add(bookname);
 		add(bookwriter);
 		add(publisher);
+		
 		bookcode.setBounds(60, 15, 50, 12);
 		bookname.setBounds(120, 15, 50, 12);
 		bookwriter.setBounds(180, 15, 40, 12);
@@ -328,7 +329,6 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 						bookRentalDialog("책 대출이 완료되었습니다.");
 
 					} else if (value.equals("없음")) {
-						// 북 코드값이 잘못되엇습니다 창 띄우기
 						bookRentalDialog("이미 대출된 책 입니다.");
 					} else {
 						System.out.println("대출에 실패하였습니다.");

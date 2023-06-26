@@ -27,9 +27,7 @@ public class MainFrame extends WindowAdapter {
 		Dimension screenSize = tk.getScreenSize();
 		tab = new JTabbedPane(JTabbedPane.TOP);
 		MainMenu m1 = new MainMenu(userInfo);
-		RentalReturnMenu m2 = new RentalReturnMenu(userInfo);
-		UserInfoMenu m3 = new UserInfoMenu(userInfo);
-		
+
 		main.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
 		main.setLocation(screenSize.width / 2 - 300, screenSize.height / 2 - 300);
 
@@ -37,11 +35,18 @@ public class MainFrame extends WindowAdapter {
 		main.add(tab);
 		main.addWindowListener(this);
 		main.setSize(600, 600);
-		
 
-		tab.addTab("Main", m1);
-		tab.addTab("도서검색 및 대여/반납", m2);
-		tab.addTab("회원정보", m3);
+		if (userInfo.getId().equals("super")) {
+			BookSearchMenu m2 = new BookSearchMenu();
+			tab.addTab("Main", m1);
+			tab.addTab("도서관리", m2);
+		} else {
+			RentalReturnMenu m2 = new RentalReturnMenu(userInfo);
+			UserInfoMenu m3 = new UserInfoMenu(userInfo);
+			tab.addTab("Main", m1);
+			tab.addTab("도서검색 및 대여/반납", m2);
+			tab.addTab("회원정보", m3);
+		}
 
 		System.out.println(userInfo.getId());
 		System.out.println(userInfo.getName());

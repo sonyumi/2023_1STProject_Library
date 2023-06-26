@@ -8,17 +8,18 @@ import javax.swing.*;
 public class JoinFrame extends WindowAdapter implements ActionListener {
 	private JFrame join;
 	private JLabel joinText, idText, pwText, nameText, gText, birthText, phoneText, emailText, idInfoText1, idInfoText2,
-			idInfoText3, birInfoText, phoneNumInfo, infoDia;
+			idInfoText3, birInfoText, phoneNumInfo, infoDia, infoErrorDia;
 	private JTextField insId, insName, insPhone, insBirth, insEmail;
 	private JPasswordField insPw;
 	private ButtonGroup bg;
 	private JRadioButton[] gender;
-	private Button overlapId, joinBt, infoButton;
+	private Button overlapId, joinBt, infoErrorButton, infoButton;
 	private Font font, font1, font2, font3;
-	private Dialog dia;
+	private Dialog dia, diaError;
 	private String sGender[] = { "남", "여" };
 	private MemberDAO dao;
 	private JoinDAO dao1;
+	private String check = null; // 아이디 중복 체크
 
 	public void setJoinFrame() {
 		dao = new MemberDAO();
@@ -163,9 +164,10 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 	}
 
 	public void JoinDialog(String s) {
-		dia = new Dialog(join, "Info", true);
+		dia = new Dialog(join, "Infomation", true);
 		infoDia = new JLabel();
 		infoButton = new Button("확인");
+		dia.setResizable(false);
 		dia.addWindowListener(this);
 		dia.add(infoDia);
 		dia.add(infoButton);
@@ -176,7 +178,26 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		infoDia.setText(s);
 		infoButton.addActionListener(this);
 		infoDia.setBounds(55, 50, 185, 30);
+		dia.setVisible(true);
+	}
 
+	public void JoinDialogError(String s) {
+		diaError = new Dialog(join, "Error!", true);
+		infoErrorDia = new JLabel();
+		infoErrorButton = new Button("확인");
+		diaError.setResizable(false);
+		diaError.addWindowListener(this);
+		// diaError.setComponentOrientation();
+		diaError.add(infoErrorDia);
+		diaError.add(infoErrorButton);
+		diaError.setLayout(null);
+		diaError.setBounds(600, 300, 300, 150);
+		infoErrorDia.setFont(font3);
+		infoErrorButton.setBounds(125, 102, 50, 25);
+		infoErrorDia.setText(s);
+		infoErrorButton.addActionListener(this);
+		infoErrorDia.setBounds(35, 50, 250, 30);
+		diaError.setVisible(true);
 	}
 
 	@Override
@@ -190,6 +211,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 					idInfoText1.setVisible(false);
 					idInfoText3.setVisible(false);
 					idInfoText2.setVisible(true);
+					check = "아이디중복체크성공";
 				} else {
 					idInfoText1.setVisible(false);
 					idInfoText2.setVisible(false);
@@ -197,38 +219,101 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				}
 			}
 		}
-		// 회원가입 조건 줘야함 내일6/27 수정 예정
+
 		if (e.getActionCommand().equals("회원가입")) {
-			if (insId.getText().length() != 0) {
-				String tfpw = "";
-				String rbge = "";
-				if (gender[0].isSelected()) {
-					rbge = gender[0].getText();
-				} else {
-					rbge = gender[1].getText();
+			String tfpw = ""; // 비밀번호값
+			String rbge = ""; // 성별값
+			for (char cha : insPw.getPassword()) {
+				tfpw += cha;
+			} // JPassword로 입력받은 비밀번호를 변수에 저장
+			tfpw = tfpw.trim();
+			if (gender[0].isSelected()) {
+				rbge = gender[0].getText();
+			} else {
+				rbge = gender[1].getText();
+			} // 체크한 성별값을 rbge 변수에 저장
+
+			// 아이디값 체크
+			if (insId.getText().isEmpty()) {
+				JoinDialogError("아이디를 입력후 중복확인을 해주세요.");
+				return; // 아이디가 빈칸일때
+			} else {
+				for (int i = 0; i < insId.getText().length(); i++) {
+					char a = insId.getText().charAt(i);
+					if (a >= 65 && a <= 90 || a >= 97 && a <= 122 || a >= 48 && a <= 57) {
+					} else {
+						// JoinDialog("아이디 중복확인을 해주세요.");
+						JoinDialogError("아이디에 특수문자는 사용할 수 없습니다.");
+						return; // 아이디에 영문숫자를 제외한 특수문자가 들어갈때
+					}
 				}
-				for (char cha : insPw.getPassword()) {
-					tfpw += cha;
+				if (check == null) {
+					JoinDialogError("아이디 중복확인을 해주세요.");
+					return; // 중복확인에서 사용할수 없는 아이디거나 중복확인을 안했을때
 				}
-				System.out.println(rbge);
-				dao1.list(insId.getText(), tfpw, insName.getText(), rbge, insBirth.getText(), insPhone.getText(),
-						insEmail.getText());
-				JoinDialog("회원가입이 완료되었습니다.");
 			}
+
+			if (tfpw.length() < 4) {
+				JoinDialogError("패스워드를 4자리 이상 입력해주세요.");
+				return;
+			}
+
+			if (insName.getText().isEmpty()) {
+				JoinDialogError("이름을 입력해주세요.");
+				return;
+			}
+
+			if (insBirth.getText().length() < 7) {
+				for (int i = 0; i < insBirth.getText().length(); i++) {
+					char a = insBirth.getText().charAt(i);
+					if (a != '0' && a != '1' && a != '2' && a != '3' && a != '4' && a != '5' && a != '6' && a != '7'
+							&& a != '8' && a != '9') {
+						JoinDialogError("생년월일은 숫자로만 입력해주세요.");
+						return;
+					}
+				}
+			} else {
+				JoinDialogError("생년월일은 6자리로 입력해주세요.");
+				return;
+			}
+
+			if (insPhone.getText().length() > 12) {
+				for (int i = 0; i < insPhone.getText().length(); i++) {
+					char a = insBirth.getText().charAt(i);
+					if (a != '0' && a != '1' && a != '2' && a != '3' && a != '4' && a != '5' && a != '6' && a != '7'
+							&& a != '8' && a != '9') {
+						JoinDialogError("전화번호는 숫자로만 입력해주세요.");
+						return;
+					}
+				}
+			} else {
+				JoinDialogError("전화번호는 11자리 이하로 입력해주세요.");
+				return;
+			}
+
+			dao1.list(insId.getText(), tfpw, insName.getText(), rbge, insBirth.getText(), insPhone.getText(),
+					insEmail.getText());
+			JoinDialog("회원가입이 완료되었습니다.");
 		}
 		if (e.getActionCommand().equals("확인")) {
-			dia.dispose();
-			join.dispose();
+//			System.out.println();
+//			System.out.println(diaError);
+			//여기 고쳐야함..
 		}
 	}
 
 	public void windowClosing(WindowEvent e) {
 		if (e.getComponent() == dia) {
 			dia.dispose();
-			join.dispose();
+		}
+		if (e.getComponent() == diaError) {
+			diaError.dispose();
 		}
 		if (e.getComponent() == join) {
+			LoginFrame login = new LoginFrame();
+			login.getLoginFrame();
 			join.dispose();
+
 		}
 	}
 }

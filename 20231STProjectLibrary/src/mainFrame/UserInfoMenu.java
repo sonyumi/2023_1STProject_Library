@@ -22,7 +22,7 @@ import login.MemberVo;
 
 @SuppressWarnings("serial")
 public class UserInfoMenu extends JPanel implements ActionListener {
-	private JLabel userIn, userId, userPw, userName, userGender, userBirth, userNumber, userEmail, diaInfo,infomsg;
+	private JLabel userIn, userId, userPw, userName, userGender, userBirth, userNumber, userEmail, diaInfo, infomsg;
 	private JTextField inpId, inpName, inpBirth, inpNumber, inpEmail;
 	private JPasswordField inpPw;
 	private Checkbox man, woman;
@@ -33,8 +33,8 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 	private MemberVo userInfo;
 
 	public UserInfoMenu(MemberVo userinfo) {
-		this.userInfo = userinfo;
-
+		this.userInfo=userinfo;
+		
 		font1 = new Font("맑은고딕", Font.BOLD, 25);
 		font2 = new Font("맑은고딕", Font.PLAIN, 20);
 		font3 = new Font("맑은고딕", Font.PLAIN, 18);
@@ -56,9 +56,11 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 		inpEmail = new JTextField();
 
 		genderGroup = new CheckboxGroup();
-		if (userInfo.getGender().equals("남")) {
+
+		if (userinfo.getGender().equals("남")) {
 			man = new Checkbox("남", genderGroup, true);
 			woman = new Checkbox("여", genderGroup, false);
+
 		} else {
 			man = new Checkbox("남", genderGroup, false);
 			woman = new Checkbox("여", genderGroup, true);
@@ -152,8 +154,8 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 		endBt.setBounds(240, 420, 120, 45);
 		endBt.setFont(font3);
 		endBt.addActionListener(this);
-		
-		infomsg.setFont(new Font("맑은고딕",Font.PLAIN,10));
+
+		infomsg.setFont(new Font("맑은고딕", Font.PLAIN, 10));
 		infomsg.setBounds(280, 150, 250, 10);
 
 	}

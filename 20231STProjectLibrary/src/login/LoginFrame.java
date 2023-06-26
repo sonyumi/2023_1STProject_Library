@@ -191,10 +191,15 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 
 			if (tfid.equals(id)) {
 				if (tfpw.equals(pw)) {
-					// LoginDialog("성공");
-					this.login.dispose();
-					MainFrame mf = new MainFrame(data);
-					mf.getMainFrame();
+					if(tfid.equals("super")) {
+						this.login.dispose();
+						MainFrame mf = new MainFrame(data);
+						mf.getMainFrame();
+					} else {
+						this.login.dispose();
+						MainFrame mf = new MainFrame(data);
+						mf.getMainFrame();
+					}
 
 				} else {
 					LoginDialog("비밀번호를 다시 입력해주세요.");
@@ -212,6 +217,7 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		if (e.getActionCommand().equals("회원가입")) {
 			JoinFrame jf = new JoinFrame();
 			jf.setJoinFrame();
+			login.dispose();
 		}
 		if (e.getActionCommand().equals("아이디찾기")) {
 			IdFind idf = new IdFind();
