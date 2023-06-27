@@ -142,6 +142,51 @@ public class BookDAO extends MemberDAO {
 		return list;
 	}
 
+	public ArrayList<BookVo> list1(String code, String table) {
+		ArrayList<BookVo> list1 = new ArrayList<BookVo>();
+		//
+		try {
+			connDB(); // DB에 연결 하도록 만든 메소드
+			String query = "SELECT bb.book_code,bb.book_name,bb.writer,bb.publisher,bb.POSITION,bb.image,c.반납예정일\r\n"
+					+ "FROM (\r\n"
+					+ "SELECT b.BOOK_CODE ,RANK() OVER(PARTITION BY b.BOOK_CODE ORDER BY rental_code DESC) a,TO_char(r.RENTAL_DATE+r.RENTAL_DAYS,'YYYY-MM-HH:MI:SS') 반납예정일\r\n"
+					+ "FROM booklist b, RENTAL r \r\n"
+					+ "WHERE b.BOOK_CODE =r.BOOK_CODE (+) AND r.RETURN_DATE IS NULL) c , booklist bb\r\n"
+					+ "WHERE bb.book_code = c.book_code(+)";
+
+			if (table != "all") {
+				query += " AND bb." + table + "='" + code + "'";
+			}
+			System.out.println("SQL : " + query);
+			rs = stmt.executeQuery(query); // 쿼리 실행문
+			rs.last();
+			System.out.println(rs.getRow());
+
+			if (rs.getRow() == 0) {
+				// 입력된 아이디 값과 일치하는 데이터가 없을때
+			} else {
+				System.out.println(rs.getRow()); // 현재 커서 값 출력
+				rs.beforeFirst(); // 커서를 0번으로 돌리기 (0번부터 조회)
+				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
+					String bCode = rs.getString("book_code");
+					String bName = rs.getString("book_name");
+					String bWirter = rs.getString("writer");
+					String bPublisher = rs.getString("publisher");
+					String bPosition = rs.getString("position");
+					String bReturndate = rs.getString("반납예정일");
+					String bImg = rs.getString("image");
+					BookVo data = new BookVo(bCode, bName, bWirter, bPublisher, bPosition, bReturndate, bImg);
+					// 변수생성(쿼리문을 저장하기위함)
+					list1.add(data);// 리스트에 값 저장
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list1;
+	}
+
 	// 상위 6개의 책을 찾는 쿼리
 	public ArrayList<BookVo> list(int i) {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();

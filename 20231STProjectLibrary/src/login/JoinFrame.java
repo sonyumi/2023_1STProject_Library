@@ -187,7 +187,6 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		infoErrorButton = new Button("확인");
 		diaError.setResizable(false);
 		diaError.addWindowListener(this);
-		// diaError.setComponentOrientation();
 		diaError.add(infoErrorDia);
 		diaError.add(infoErrorButton);
 		diaError.setLayout(null);
@@ -196,6 +195,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		infoErrorButton.setBounds(125, 102, 50, 25);
 		infoErrorDia.setText(s);
 		infoErrorButton.addActionListener(this);
+		infoErrorButton.setActionCommand("에러");
 		infoErrorDia.setBounds(35, 50, 250, 30);
 		diaError.setVisible(true);
 	}
@@ -263,7 +263,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				return;
 			}
 
-			if (insBirth.getText().length() < 7) {
+			if (insBirth.getText().length() == 6) {
 				for (int i = 0; i < insBirth.getText().length(); i++) {
 					char a = insBirth.getText().charAt(i);
 					if (a != '0' && a != '1' && a != '2' && a != '3' && a != '4' && a != '5' && a != '6' && a != '7'
@@ -277,9 +277,9 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				return;
 			}
 
-			if (insPhone.getText().length() > 12) {
+			if (insPhone.getText().length() < 12 && insPhone.getText().length() > 0) {
 				for (int i = 0; i < insPhone.getText().length(); i++) {
-					char a = insBirth.getText().charAt(i);
+					char a = insPhone.getText().charAt(i);
 					if (a != '0' && a != '1' && a != '2' && a != '3' && a != '4' && a != '5' && a != '6' && a != '7'
 							&& a != '8' && a != '9') {
 						JoinDialogError("전화번호는 숫자로만 입력해주세요.");
@@ -296,9 +296,14 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 			JoinDialog("회원가입이 완료되었습니다.");
 		}
 		if (e.getActionCommand().equals("확인")) {
-//			System.out.println();
-//			System.out.println(diaError);
-			//여기 고쳐야함..
+			dia.dispose();
+			join.dispose();
+			LoginFrame login = new LoginFrame();
+			login.getLoginFrame();
+		}
+
+		if (e.getActionCommand().equals("에러")) {
+			diaError.dispose();
 		}
 	}
 

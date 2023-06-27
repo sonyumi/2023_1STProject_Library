@@ -134,7 +134,6 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 	public void setSearchTable2(String inp, int code) {
 		String[] field1 = { "책코드", "책이름", "저자", "출판사", "위치", "대여가능여부" };
 		tb1.setSize(200, 200);
-
 		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tb1.addMouseListener(this);
 		list1 = dao.list(inp, code);
