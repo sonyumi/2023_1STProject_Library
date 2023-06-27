@@ -253,15 +253,16 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		dia.setLayout(null);
 		dia.setBounds(600, 300, 300, 150);
 		infoDia.setFont(font3);
-		infoButton.setBounds(125, 102, 50, 25);
+		infoButton.setBounds(125, 102, 60, 25);
 		infoDia.setText(s);
 		infoButton.addActionListener(this);
-		infoDia.setBounds(55, 50, 185, 30);
+		infoDia.setBounds(30, 50, 250, 30);
 		dia.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		list = dao.list1("all", "all");
 		String code1 = inpBookCode.getText();
 		String name1 = inpBookName.getText();
 		String writer1 = inpWriter.getText();
@@ -293,13 +294,16 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		}
 
 		if (e.getActionCommand().equals("수정하기")) {
+			tb1.setVisible(false);
 			if (imglink1 == null) {
 				imglink1 = "";
 			}
+			// try {
 			if (code1.length() == 0) {
 				infoDialog("책 코드를 입력해주세요.");
-
-			} else if (code1.equals(list.get(tb1.getSelectedRow()).getCode())==false) {
+			} else if (code1.length() > 12) {
+				infoDialog("책 길이는 11자 이내로 입력해주세요.");
+			} else if (code1.equals(list.get(tb1.getSelectedRow()).getCode()) == false) {
 				infoDialog("책 코드는 수정 할 수 없습니다.");
 			} else if (name1.length() == 0) {
 				infoDialog("책 이름을 입력해주세요.");
@@ -316,16 +320,32 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 				System.out.println(position1);
 				System.out.println(imglink1);
 				list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 0);
+				infoDialog("책 수정이 완료되었습니다.");
 			}
+			// } catch (Exception ee) {
+			// infoDialog("책을 수정할 수 없습니다.");
+			// }
+			bookSearchTable2("all", "all");
+			tb1.setVisible(true);
 		}
-
+		if (e.getActionCommand().equals("확인")) {
+			dia.dispose();
+		}
 		if (e.getActionCommand().equals("추가하기")) {
+			tb1.setVisible(false);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getCode().equals(code1)) {
+					infoDialog("같은 책 코드가 이미 존재합니다.");
+					return;
+				}
+			}
 			if (imglink1 == null) {
 				imglink1 = "";
 			}
 			if (code1.length() == 0) {
 				infoDialog("책 코드를 입력해주세요.");
-
+			} else if (code1.length() > 12) {
+				infoDialog("책 길이는 11자 이내로 입력해주세요.");
 			} else if (name1.length() == 0) {
 				infoDialog("책 이름을 입력해주세요.");
 			} else if (writer1.length() == 0) {
@@ -341,20 +361,47 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 				System.out.println(position1);
 				System.out.println(imglink1);
 				list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 1);
-				infoDialog("수정이 완료되었습니다.");
+				infoDialog("책 추가가 완료되었습니다.");
+				inpBookCode.setText("");
+				inpBookName.setText("");
+				inpWriter.setText("");
+				inpPublisher.setText("");
+				positionA.select(0);
+				positionB.select(0);
+				inpImage.setIcon(null);
 			}
+			bookSearchTable2("all", "all");
+			tb1.setVisible(true);
 		}
 
-		if (e.getActionCommand().equals("삭제하기")) { // 여기 수정해야됨 쿼리문 손볼것
+		if (e.getActionCommand().equals("삭제하기")) {
+			tb1.setVisible(false);
+			list = dao.list1(code1, "책코드");
 			if (code1.length() == 0) {
 				infoDialog("책 코드를 입력해주세요.");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
-					if (code1.equals(list.get(i).getCode())) {
+					if (list.get(i).getbReturn()==null) {
+						if (code1.equals(list.get(i).getCode())) {
 						list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 2);
+							infoDialog("책 삭제가 완료되었습니다.");
+							inpBookCode.setText("");
+							inpBookName.setText("");
+							inpWriter.setText("");
+							inpPublisher.setText("");
+							positionA.select(0);
+							positionB.select(0);
+							inpImage.setIcon(null);
+							return;
+						}
+					} else {
+						infoDialog("빌린내역이 있으면 삭제할 수 없습니다.");
+						return;
 					}
 				}
 			}
+			bookSearchTable2("all", "all");
+			tb1.setVisible(true);
 		}
 	}
 

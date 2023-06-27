@@ -137,6 +137,8 @@ public class BookDAO extends MemberDAO {
 							+ "'" + code + "'," + "'" + name + "'," + "'" + writer + "'," + "'" + publisher + "'," + "'"
 							+ position + "'," + "'" + image + "')";
 				} else if(i==2) {
+					query = "DELETE rental WHERE book_code = '" + code + "'";
+					rs = stmt.executeQuery(query);
 					query = "DELETE booklist WHERE book_code = '" + code + "'";
 				}
 				System.out.println("SQL : " + query);
