@@ -7,11 +7,14 @@ import login.MemberDAO;
 
 public class BookDAO extends MemberDAO {
 
+	public BookDAO() {
+		super.connDB();
+	}
+
 	public ArrayList<BookVo> list(String code) {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();
 		//
 		try {
-			connDB(); // DB에 연결 하도록 만든 메소드
 			String query = "SELECT * FROM booklist";
 
 			if (code != null) {
@@ -54,7 +57,6 @@ public class BookDAO extends MemberDAO {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();
 		//
 		try {
-			connDB(); // DB에 연결 하도록 만든 메소드
 			String query = "SELECT B.BOOK_CODE,B.BOOK_NAME,B.WRITER ,B.PUBLISHER ,B.POSITION,C.대여가능여부,b.image\r\n"
 					+ "FROM (SELECT BOOK_CODE ,book_name,rental_date,return_date,대여가능여부\r\n"
 					+ "FROM (SELECT book_code,BOOK_NAME,rental_date,a.RETURN_DATE,a.rental_code,RANK() OVER (PARTITION BY book_code ORDER BY rental_code desc) a,\r\n"
@@ -115,27 +117,32 @@ public class BookDAO extends MemberDAO {
 	}
 
 	// 레코드 추가 메서드
-	public ArrayList<BookVo> list(String code, String name, String writer, String publisher, String POSITION,
-			String image) {
+	public ArrayList<BookVo> list(String code, String name, String writer, String publisher, String position,
+			String image, int i) {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();
-		//
 		code = code.trim();
 		name = name.trim();
 		writer = writer.trim();
 		publisher = publisher.trim();
-		POSITION = POSITION.trim();
+		position = position.trim();
 		image = image.trim();
 
 		try {
-			connDB(); // DB에 연결 하도록 만든 메소드
-			String query = "Insert into booklist (book_code,book_name,writer,publisher,POSITION,image)";
-
 			if (code != null) {
-				query += " VALUES (" + "'" + code + "'," + "'" + name + "'," + "'" + writer + "'," + "'" + publisher
-						+ "'," + "'" + POSITION + "'," + "'" + image + "')";
+				String query = "select * from booklist";
+				if (i == 0) {
+					query=" UPDATE booklist b SET b.BOOK_NAME = '"+name+"',b.WRITER = '"+writer+"',b.PUBLISHER ='"+publisher+"',b.POSITION = '"+position+"',b.IMAGE ='"+image+"'  WHERE book_code = '"+code+"'";
+				} else if (i == 1) { // 새로 만들기
+					query = "Insert into booklist (book_code,book_name,writer,publisher,POSITION,image)" + " VALUES ("
+							+ "'" + code + "'," + "'" + name + "'," + "'" + writer + "'," + "'" + publisher + "'," + "'"
+							+ position + "'," + "'" + image + "')";
+				} else if(i==2) {
+					query = "DELETE booklist WHERE book_code = '" + code + "'";
+				}
+				System.out.println("SQL : " + query);
+				rs = stmt.executeQuery(query); // 쿼리 실행문
 			}
-			System.out.println("SQL : " + query);
-			super.rs = super.stmt.executeQuery(query); // 쿼리 실행문
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -146,7 +153,6 @@ public class BookDAO extends MemberDAO {
 		ArrayList<BookVo> list1 = new ArrayList<BookVo>();
 		//
 		try {
-			connDB(); // DB에 연결 하도록 만든 메소드
 			String query = "SELECT bb.book_code,bb.book_name,bb.writer,bb.publisher,bb.POSITION,bb.image,c.반납예정일\r\n"
 					+ "FROM (\r\n"
 					+ "SELECT b.BOOK_CODE ,RANK() OVER(PARTITION BY b.BOOK_CODE ORDER BY rental_code DESC) a,TO_char(r.RENTAL_DATE+r.RENTAL_DAYS,'YYYY-MM-HH:MI:SS') 반납예정일\r\n"
@@ -154,8 +160,18 @@ public class BookDAO extends MemberDAO {
 					+ "WHERE b.BOOK_CODE =r.BOOK_CODE (+) AND r.RETURN_DATE IS NULL) c , booklist bb\r\n"
 					+ "WHERE bb.book_code = c.book_code(+)";
 
-			if (table != "all") {
-				query += " AND bb." + table + "='" + code + "'";
+			if (code != null) {
+				if (table.equals("all")) {
+				} else if (table.equals("책코드")) {
+					query += " AND bb.book_code='" + code + "'";
+				} else if (table.equals("책이름")) {
+					query += " AND bb.book_name LIKE '%" + code + "%'";
+				} else if (table.equals("저자")) {
+					query += " AND bb.writer LIKE '%" + code + "%'";
+				} else if (table.equals("출판사")) {
+					query += " AND bb.publisher LIKE '%" + code + "%'";
+				}
+
 			}
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query); // 쿼리 실행문
@@ -192,7 +208,6 @@ public class BookDAO extends MemberDAO {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();
 		//
 		try {
-			connDB(); // DB에 연결 하도록 만든 메소드
 			String query = "SELECT a.BOOK_CODE,b.BOOK_NAME,b.WRITER ,b.PUBLISHER ,b.IMAGE FROM (SELECT rownum 순위,BOOK_CODE FROM (SELECT book_code,count(*) FROM rental WHERE to_char(rental_date, 'mm') LIKE to_char(SysDATE,'mm') GROUP BY book_code ORDER BY count(*) DESC) WHERE rownum<=";
 
 			if (i != 0) {

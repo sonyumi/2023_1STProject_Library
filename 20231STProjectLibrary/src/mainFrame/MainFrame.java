@@ -1,6 +1,7 @@
 package mainFrame;
 
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,7 +17,11 @@ public class MainFrame extends WindowAdapter {
 	private JFrame main;
 	private JTabbedPane tab;
 	private MemberVo userInfo;
+	private FileDialog fileOpen;
 
+	public MainFrame(){
+		
+	}
 	public MainFrame(MemberVo userInfo) {
 		this.userInfo = userInfo;
 	}
@@ -51,6 +56,15 @@ public class MainFrame extends WindowAdapter {
 		System.out.println(userInfo.getId());
 		System.out.println(userInfo.getName());
 
+	}
+	
+	public String getFileDialog() {
+		fileOpen = new FileDialog(main, "File Open", FileDialog.LOAD);
+		fileOpen.setDirectory("C:\\Windows");
+		fileOpen.setVisible(true);
+		String filelink = fileOpen.getDirectory()+fileOpen.getFile();
+		return filelink;
+				
 	}
 
 	public void windowClosing(WindowEvent e) {

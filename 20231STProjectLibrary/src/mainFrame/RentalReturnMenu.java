@@ -120,7 +120,6 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		tb1.addMouseListener(this);
 		list1 = dao.list(inp, code);
 		col = new DefaultTableModel(field1, 0);
-//		JScrollPane listScroll1 = new JScrollPane(tb1);
 		for (BookVo vo : list1) {
 			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getPosition(),
 					vo.getbReturn() };
