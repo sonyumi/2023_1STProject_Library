@@ -19,15 +19,16 @@ public class MainFrame extends WindowAdapter {
 	private MemberVo userInfo;
 	private FileDialog fileOpen;
 
-	public MainFrame(){
-		
+	public MainFrame() {
+
 	}
+
 	public MainFrame(MemberVo userInfo) {
 		this.userInfo = userInfo;
 	}
 
 	private void setFrameTab() {
-		main = new JFrame("도서 대출 반납 시스템");
+		main = new JFrame("도서 대여 반납 시스템");
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		tab = new JTabbedPane(JTabbedPane.TOP);
@@ -43,8 +44,10 @@ public class MainFrame extends WindowAdapter {
 
 		if (userInfo.getId().equals("super")) {
 			BookSearchMenu m2 = new BookSearchMenu();
+			UserManagementMenu m3 = new UserManagementMenu();
 			tab.addTab("Main", m1);
 			tab.addTab("도서관리", m2);
+			tab.addTab("사용자관리", m3);
 		} else {
 			RentalReturnMenu m2 = new RentalReturnMenu(userInfo);
 			UserInfoMenu m3 = new UserInfoMenu(userInfo);
@@ -57,14 +60,14 @@ public class MainFrame extends WindowAdapter {
 		System.out.println(userInfo.getName());
 
 	}
-	
+
 	public String getFileDialog() {
 		fileOpen = new FileDialog(main, "File Open", FileDialog.LOAD);
 		fileOpen.setDirectory("C:\\Windows");
 		fileOpen.setVisible(true);
-		String filelink = fileOpen.getDirectory()+fileOpen.getFile();
+		String filelink = fileOpen.getDirectory() + fileOpen.getFile();
 		return filelink;
-				
+
 	}
 
 	public void windowClosing(WindowEvent e) {

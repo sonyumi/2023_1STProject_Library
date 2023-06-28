@@ -222,10 +222,12 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		if (e.getActionCommand().equals("아이디찾기")) {
 			IdFind idf = new IdFind();
 			idf.setIdFine();
+			login.dispose();
 		}
 		if (e.getActionCommand().equals("비밀번호찾기")) {
 			PasswordFind pf = new PasswordFind();
 			pf.setPasswordFine();
+			login.dispose();
 		}
 	}
 

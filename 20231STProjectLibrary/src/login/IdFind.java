@@ -43,6 +43,7 @@ public class IdFind extends WindowAdapter implements ActionListener {
 		idFind.setResizable(false);
 		idFind.setLocationRelativeTo(null);
 		idFind.setLayout(null);
+		idFind.addWindowListener(this);
 
 		idFindText.setBounds(65, 10, 165, 50);
 		idFindText.setFont(font);
@@ -133,8 +134,11 @@ public class IdFind extends WindowAdapter implements ActionListener {
 			dia.dispose();
 		}
 		if (e.getComponent() == idFind) {
+			LoginFrame login = new LoginFrame();
+			login.getLoginFrame();
 			idFind.dispose();
 		}
+
 	}
 
 	@Override
@@ -151,9 +155,9 @@ public class IdFind extends WindowAdapter implements ActionListener {
 				findDialog(data.getId());
 			} else if (name.isEmpty()) {
 				findFailDialog("이름을 입력해주세요.");
-			} else if(birth.isEmpty()) {
+			} else if (birth.isEmpty()) {
 				findFailDialog("생년월일을 입력해주세요.");
-			} else if(num.isEmpty()) {
+			} else if (num.isEmpty()) {
 				findFailDialog("전화번호를 입력해주세요.");
 			} else {
 				findFailDialog("회원정보를 찾을 수 없습니다.");

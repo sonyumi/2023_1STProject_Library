@@ -158,6 +158,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		idInfoText3.setVisible(false);
 
 		join.add(birInfoText);
+		join.addWindowListener(this);
 		birInfoText.setBounds(0, 0, 0, 0);
 
 		join.setVisible(true);

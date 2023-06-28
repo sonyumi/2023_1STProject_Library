@@ -6,15 +6,22 @@ import java.awt.CheckboxGroup;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -31,7 +38,7 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 	private JTextField inpBookSearch, inpBookCode, inpBookName, inpWriter, inpPublisher;
 	private JLabel bookSearch, borderLine1, borderLine2, bookInfo, infoBookCode, infoBookName, infoWriter,
 			infoPublisher, infoPosition, infoLabel, inpImage, infoDia;
-	private Button searchBt, modifyBt, addBt, deleteBt, imgAddBt, infoButton;
+	private Button searchBt, modifyBt, addBt, deleteBt, imgAddBt, infoButton, nullBt, diaBt, diaDeleteBt;
 	private Choice positionA, positionB;
 	private Checkbox bookcode, bookname, bookwriter, publisher;
 	private CheckboxGroup searchGroup;
@@ -140,9 +147,10 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		infoPublisher = new JLabel("출판사");
 		infoPosition = new JLabel("위치");
 		infoLabel = new JLabel("※책코드는 수정이 불가능합니다.");
-		modifyBt = new Button("수정하기");
-		addBt = new Button("추가하기");
-		deleteBt = new Button("삭제하기");
+		modifyBt = new Button("책정보수정");
+		addBt = new Button("책추가");
+		deleteBt = new Button("책폐기");
+		nullBt = new Button("초기화");
 		inpBookCode = new JTextField();
 		inpBookName = new JTextField();
 		inpWriter = new JTextField();
@@ -170,6 +178,7 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		add(positionA);
 		add(positionB);
 		add(imgAddBt);
+		add(nullBt);
 		add(inpImage);
 		add(borderLine2);
 
@@ -183,6 +192,8 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		infoBookCode.setFont(font2);
 		inpBookCode.setBounds(90, 325, 100, 25);
 		inpBookCode.setFont(font3);
+		inpBookCode.setEnabled(false);
+		inpBookCode.setText(getNewCode());
 
 		infoBookName.setBounds(205, 329, 50, 15);
 		infoBookName.setFont(font2);
@@ -199,6 +210,8 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		inpPublisher.setBounds(250, 375, 100, 25);
 		inpPublisher.setFont(font3);
 
+		infoLabel.setBounds(55, 350, 150, 10);
+		infoLabel.setFont(new Font("맑은고딕", Font.PLAIN, 9));
 		infoPosition.setBounds(55, 429, 30, 15);
 		infoPosition.setFont(font2);
 		positionA.setBounds(95, 425, 35, 25);
@@ -225,18 +238,22 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		imgAddBt.setFont(new Font("맑은고딕", Font.PLAIN, 10));
 		imgAddBt.addActionListener(this);
 
-		modifyBt.setBounds(100, 470, 60, 30);
+		modifyBt.setBounds(100, 470, 80, 30);
 		modifyBt.addActionListener(this);
 
-		addBt.setBounds(190, 470, 60, 30);
+		addBt.setBounds(205, 470, 60, 30);
 		addBt.addActionListener(this);
 
-		deleteBt.setBounds(280, 470, 60, 30);
+		deleteBt.setBounds(290, 470, 60, 30);
 		deleteBt.addActionListener(this);
 
+		nullBt.setBounds(35, 280, 50, 25);
+		nullBt.addActionListener(this);
 	}
 
 	public void infoDialog(String s) {
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Dimension screenSize = tk.getScreenSize();
 		dia = new Dialog(dia, "Infomation", true);
 		infoDia = new JLabel();
 		infoButton = new Button("확인");
@@ -251,13 +268,53 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		dia.add(infoDia);
 		dia.add(infoButton);
 		dia.setLayout(null);
-		dia.setBounds(600, 300, 300, 150);
+		dia.setBounds(screenSize.width / 2 - 150, screenSize.height / 2 - 75, 300, 150);
 		infoDia.setFont(font3);
 		infoButton.setBounds(125, 102, 60, 25);
 		infoDia.setText(s);
 		infoButton.addActionListener(this);
 		infoDia.setBounds(30, 50, 250, 30);
 		dia.setVisible(true);
+	}
+
+	public void infoWainingDia() {
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Dimension screenSize = tk.getScreenSize();
+		dia = new Dialog(dia);
+		diaBt = new Button("취소하기");
+		diaDeleteBt = new Button("삭제하기");
+		infoDia = new JLabel("정말로 삭제하시겠습니까?");
+		dia.add(diaBt);
+		dia.add(diaDeleteBt);
+		dia.setTitle("Info");
+		dia.add(infoDia);
+		dia.setModal(true);
+		dia.setResizable(false);
+		dia.setLayout(null);
+		dia.setBounds(screenSize.width / 2 - 150, screenSize.height / 2 - 75, 300, 150);
+		diaBt.addActionListener(this);
+		diaBt.setBounds(170, 102, 65, 25);
+		diaDeleteBt.setBounds(70, 102, 65, 25);
+		diaDeleteBt.addActionListener(this);
+		infoDia.setBounds(45, 50, 220, 30);
+		dia.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				if (e.getComponent() == dia) {
+					dia.dispose();
+				}
+			}
+		});
+		dia.setVisible(true);
+	}
+
+	public String getNewCode() {
+		Instant instant = new Date().toInstant();
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		String formatted = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime);
+		formatted = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String getCode = formatted.toString();
+		getCode = dao.getNewCode(getCode);
+		return getCode;
 	}
 
 	@Override
@@ -269,22 +326,16 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		String publisher1 = inpPublisher.getText();
 		String position1 = positionA.getSelectedItem() + "-" + positionB.getSelectedItem();
 		String imglink1 = imglink;
-		if (e.getActionCommand().equals("검색")) {
-			String seachText = inpBookSearch.getText();
-			tb1.setVisible(false);
-			if (inpBookSearch.getText().length() != 0 && bookcode.getState()) {
-				bookSearchTable2(seachText, "책코드");
-			} else if (inpBookSearch.getText().length() != 0 && bookname.getState()) {
-				bookSearchTable2(seachText, "책이름");
-			} else if (inpBookSearch.getText().length() != 0 && bookwriter.getState()) {
-				bookSearchTable2(seachText, "저자");
-			} else if (inpBookSearch.getText().length() != 0 && publisher.getState()) {
-				bookSearchTable2(seachText, "출판사");
-			} else {
-				bookSearchTable2("all", "all");
-			}
-			tb1.setVisible(true);
+
+		if (e.getActionCommand().equals("초기화")) {
+			inpBookCode.setText(getNewCode());
+			inpBookName.setText("");
+			inpWriter.setText("");
+			inpPublisher.setText("");
+			positionA.select(0);
+			positionB.select(0);
 		}
+
 		if (e.getActionCommand().equals("이미지첨부")) {
 			imglink = mf.getFileDialog();
 			ImageIcon img = new ImageIcon(imglink);
@@ -293,8 +344,7 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 			inpImage.setIcon(new ImageIcon(changeImg));
 		}
 
-		if (e.getActionCommand().equals("수정하기")) {
-			tb1.setVisible(false);
+		if (e.getActionCommand().equals("책정보수정")) {
 			if (imglink1 == null) {
 				imglink1 = "";
 			}
@@ -331,7 +381,7 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		if (e.getActionCommand().equals("확인")) {
 			dia.dispose();
 		}
-		if (e.getActionCommand().equals("추가하기")) {
+		if (e.getActionCommand().equals("책추가")) {
 			tb1.setVisible(false);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getCode().equals(code1)) {
@@ -371,38 +421,69 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 				inpImage.setIcon(null);
 			}
 			bookSearchTable2("all", "all");
-			tb1.setVisible(true);
+		}
+		if (e.getActionCommand().equals("책폐기")) {
+			list = dao.list1(code1, "책코드");
+			if (list.size() == 0) {
+				infoDialog("현재 북 코드는 없는 책입니다.");
+			} else {
+				infoWainingDia();
+			}
+
 		}
 
 		if (e.getActionCommand().equals("삭제하기")) {
 			tb1.setVisible(false);
 			list = dao.list1(code1, "책코드");
+			System.out.println(list.get(0));
 			if (code1.length() == 0) {
+				dia.dispose();
 				infoDialog("책 코드를 입력해주세요.");
 			} else {
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).getbReturn()==null) {
-						if (code1.equals(list.get(i).getCode())) {
-						list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 2);
-							infoDialog("책 삭제가 완료되었습니다.");
-							inpBookCode.setText("");
-							inpBookName.setText("");
-							inpWriter.setText("");
-							inpPublisher.setText("");
-							positionA.select(0);
-							positionB.select(0);
-							inpImage.setIcon(null);
-							return;
-						}
-					} else {
-						infoDialog("빌린내역이 있으면 삭제할 수 없습니다.");
-						return;
-					}
+				if (list.get(0).getbReturn() == null && code1.equals(list.get(0).getCode())) {
+					list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 2);
+					dia.dispose();
+					infoDialog("책 삭제가 완료되었습니다.");
+					inpBookCode.setText("");
+					inpBookName.setText("");
+					inpWriter.setText("");
+					inpPublisher.setText("");
+					positionA.select(0);
+					positionB.select(0);
+					inpImage.setIcon(null);
+					return;
+
+				} else {
+					dia.dispose();
+					infoDialog("빌린내역이 있으면 삭제할 수 없습니다.");
+					return;
+
 				}
 			}
-			bookSearchTable2("all", "all");
-			tb1.setVisible(true);
 		}
+		if (e.getActionCommand().equals("취소하기")) {
+			dia.dispose();
+		}
+		bookSearchTable2("all", "all");
+
+		if (e.getActionCommand().equals("검색")) {
+			String seachText = inpBookSearch.getText();
+			tb1.setVisible(false);
+			if (inpBookSearch.getText().length() != 0 && bookcode.getState()) {
+				bookSearchTable2(seachText, "책코드");
+			} else if (inpBookSearch.getText().length() != 0 && bookname.getState()) {
+				bookSearchTable2(seachText, "책이름");
+			} else if (inpBookSearch.getText().length() != 0 && bookwriter.getState()) {
+				bookSearchTable2(seachText, "저자");
+			} else if (inpBookSearch.getText().length() != 0 && publisher.getState()) {
+				bookSearchTable2(seachText, "출판사");
+			} else {
+				bookSearchTable2("all", "all");
+			}
+		}
+
+		tb1.setVisible(true);
+
 	}
 
 	@Override

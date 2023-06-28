@@ -132,6 +132,8 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 			dia.dispose();
 		}
 		if (e.getComponent() == pwFind) {
+			LoginFrame login = new LoginFrame();
+			login.getLoginFrame();
 			pwFind.dispose();
 		}
 	}
@@ -148,14 +150,14 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 			if (list.size() != 0) {
 				MemberVo data = (MemberVo) list.get(0);
 				findDialog(data.getPw());
-			} else if(id.isEmpty()) {
-				findFailDialog("아이디를 입력해주세요");			
-			} else if(name.isEmpty()) {
-				findFailDialog("이름을 입력해주세요");	
-			} else if(num.isEmpty()) {
-				findFailDialog("전화번호를 입력해주세요");	
-			}else {
-				findFailDialog("회원정보를 찾을 수 없습니다.");	
+			} else if (id.isEmpty()) {
+				findFailDialog("아이디를 입력해주세요");
+			} else if (name.isEmpty()) {
+				findFailDialog("이름을 입력해주세요");
+			} else if (num.isEmpty()) {
+				findFailDialog("전화번호를 입력해주세요");
+			} else {
+				findFailDialog("회원정보를 찾을 수 없습니다.");
 			}
 
 		}

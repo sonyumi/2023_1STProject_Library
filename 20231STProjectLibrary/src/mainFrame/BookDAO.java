@@ -57,31 +57,27 @@ public class BookDAO extends MemberDAO {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();
 		//
 		try {
-			String query = "SELECT B.BOOK_CODE,B.BOOK_NAME,B.WRITER ,B.PUBLISHER ,B.POSITION,C.대여가능여부,b.image\r\n"
-					+ "FROM (SELECT BOOK_CODE ,book_name,rental_date,return_date,대여가능여부\r\n"
-					+ "FROM (SELECT book_code,BOOK_NAME,rental_date,a.RETURN_DATE,a.rental_code,RANK() OVER (PARTITION BY book_code ORDER BY rental_code desc) a,\r\n"
-					+ "	CASE\r\n" + "	WHEN a.return_date IS NULL and a.rental_date IS NOT NULL THEN 'N'\r\n"
-					+ "	WHEN a.rental_date IS null AND a.return_date IS NULL THEN 'Y'\r\n" + "	ELSE 'Y'\r\n"
-					+ "	END 대여가능여부\r\n" + "FROM (\r\n"
-					+ "   SELECT B.BOOK_CODE, BOOK_NAME, RENTAL_CODE, RENTAL_USER, rental_date, RETURN_DATE\r\n"
-					+ "   FROM BOOKLIST B, RENTAL R\r\n" + "   WHERE B.BOOK_CODE = R.BOOK_CODE(+)\r\n"
-					+ "   ORDER BY B.BOOK_CODE, RENTAL_CODE DESC\r\n" + ") a\r\n"
-					+ "GROUP BY a.book_code,a.BOOK_NAME,a.RETURN_DATE,a.rental_date,rental_code\r\n" + "ORDER BY 1)\r\n"
-					+ "WHERE a=1) c , BOOKLIST B\r\n" + "WHERE B.BOOK_CODE=C.BOOK_CODE(+)";
+			String query = "SELECT bb.book_code,bb.book_name,bb.writer,bb.publisher,bb.POSITION,c.대여가능여부,bb.image\r\n"
+					+ "FROM (SELECT b.BOOK_CODE, r.RETURN_DATE ,r.RENTAL_CODE  ,rank() over(PARTITION BY b.BOOK_CODE ORDER BY rental_code desc) ra,\r\n"
+					+ "	CASE\r\n" + "	WHEN r.return_date IS NULL and r.rental_date IS NOT NULL THEN 'N'\r\n"
+					+ "	WHEN r.rental_date IS null AND r.return_date IS NULL THEN 'Y'\r\n" + "	ELSE 'Y'\r\n"
+					+ "	END 대여가능여부\r\n" + "FROM BOOKLIST b ,RENTAL r \r\n"
+					+ "WHERE b.BOOK_CODE =r.BOOK_CODE (+)) c , booklist bb\r\n"
+					+ "where ra = 1 AND bb.book_code = c.book_code(+)";
 			System.out.println(code + " " + colnum);
 			if (code != null) {
 				// 쿼리에 조건을 더해줌
 				if (colnum == 0) {
 					query += "";
 				} else if (colnum == 1) {
-					query += " AND B.BOOK_CODE like'%" + code + "%'";
+					query += " AND BB.BOOK_CODE like'%" + code + "%'";
 				} else if (colnum == 2) {
-					query += " AND B.BOOK_NAME like'%" + code + "%'";
+					query += " AND BB.BOOK_NAME like'%" + code + "%'";
 				} else if (colnum == 3) {
-					query += " AND B.WRITER like'%" + code + "%'";
+					query += " AND BB.WRITER like'%" + code + "%'";
 				} else if (colnum == 4) {
-					query += " AND B.PUBLISHER like'%" + code + "%'";
-				}
+					query += " AND BB.PUBLISHER like'%" + code + "%'";
+				} 
 			}
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
@@ -125,18 +121,18 @@ public class BookDAO extends MemberDAO {
 		writer = writer.trim();
 		publisher = publisher.trim();
 		position = position.trim();
-		image = image.trim();
-
 		try {
 			if (code != null) {
 				String query = "select * from booklist";
 				if (i == 0) {
-					query=" UPDATE booklist b SET b.BOOK_NAME = '"+name+"',b.WRITER = '"+writer+"',b.PUBLISHER ='"+publisher+"',b.POSITION = '"+position+"',b.IMAGE ='"+image+"'  WHERE book_code = '"+code+"'";
+					query = " UPDATE booklist b SET b.BOOK_NAME = '" + name + "',b.WRITER = '" + writer
+							+ "',b.PUBLISHER ='" + publisher + "',b.POSITION = '" + position + "',b.IMAGE ='" + image
+							+ "'  WHERE book_code = '" + code + "'";
 				} else if (i == 1) { // 새로 만들기
 					query = "Insert into booklist (book_code,book_name,writer,publisher,POSITION,image)" + " VALUES ("
 							+ "'" + code + "'," + "'" + name + "'," + "'" + writer + "'," + "'" + publisher + "'," + "'"
 							+ position + "'," + "'" + image + "')";
-				} else if(i==2) {
+				} else if (i == 2) {
 					query = "DELETE rental WHERE book_code = '" + code + "'";
 					rs = stmt.executeQuery(query);
 					query = "DELETE booklist WHERE book_code = '" + code + "'";
@@ -157,7 +153,7 @@ public class BookDAO extends MemberDAO {
 		try {
 			String query = "SELECT bb.book_code,bb.book_name,bb.writer,bb.publisher,bb.POSITION,bb.image,c.반납예정일\r\n"
 					+ "FROM (\r\n"
-					+ "SELECT b.BOOK_CODE ,RANK() OVER(PARTITION BY b.BOOK_CODE ORDER BY rental_code DESC) a,TO_char(r.RENTAL_DATE+r.RENTAL_DAYS,'YYYY-MM-HH:MI:SS') 반납예정일\r\n"
+					+ "SELECT b.BOOK_CODE ,RANK() OVER(PARTITION BY b.BOOK_CODE ORDER BY rental_code DESC) a,TO_char(r.RENTAL_DATE+r.RENTAL_DAYS,'YYYY-MM-DD HH:MI:SS') 반납예정일\r\n"
 					+ "FROM booklist b, RENTAL r \r\n"
 					+ "WHERE b.BOOK_CODE =r.BOOK_CODE (+) AND r.RETURN_DATE IS NULL) c , booklist bb\r\n"
 					+ "WHERE bb.book_code = c.book_code(+)";
@@ -244,4 +240,39 @@ public class BookDAO extends MemberDAO {
 		}
 		return list;
 	}
+
+	public String getNewCode(String date) {
+		String code = null;
+		try {
+			String query = "SELECT max(book_code)\r\n" + "FROM BOOKLIST b \r\n" + "WHERE book_code LIKE '%" + date
+					+ "%'";
+
+			System.out.println("SQL : " + query);
+			rs = stmt.executeQuery(query);
+			rs.last();
+			String s = rs.getString("max(book_code)");
+			if (s == null) {
+				code = "A" + date + "01";
+			} else {
+				System.out.println(s);
+				int n = Integer.parseInt(s.substring(9));
+				System.out.println();
+				char a = s.charAt(0);
+				if (n < 10) {
+					n+=1;
+					code = a + date + "0" + n;
+				} else if (n == 99) {
+					a += 1;
+					n = 1;
+					code = a + date + "0" + n;
+				} else {
+					code = a + date + n;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return code;
+	}
+
 }

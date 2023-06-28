@@ -31,10 +31,11 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 	private Dialog dia;
 	private Font font1, font2, font3;
 	private MemberVo userInfo;
+	private JoinDAO joinDao = new JoinDAO();
 
 	public UserInfoMenu(MemberVo userinfo) {
-		this.userInfo=userinfo;
-		
+		this.userInfo = userinfo;
+
 		font1 = new Font("맑은고딕", Font.BOLD, 25);
 		font2 = new Font("맑은고딕", Font.PLAIN, 20);
 		font3 = new Font("맑은고딕", Font.PLAIN, 18);
@@ -57,35 +58,36 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 
 		genderGroup = new CheckboxGroup();
 
+		man = new Checkbox("남", genderGroup, true);
+		woman = new Checkbox("여", genderGroup, false);
 		if (userinfo.getGender().equals("남")) {
-			man = new Checkbox("남", genderGroup, true);
-			woman = new Checkbox("여", genderGroup, false);
-
+			man.setState(true);
+			woman.setState(false);
 		} else {
-			man = new Checkbox("남", genderGroup, false);
-			woman = new Checkbox("여", genderGroup, true);
+			man.setState(false);
+			woman.setState(true);
 		}
 
 		pwBt = new Button("비밀번호확인");
 		endBt = new Button("회원정보수정");
 
-		add(userIn); //
-		add(userId); //
-		add(userPw);//
-		add(userName);//
-		add(userGender);//
-		add(userBirth);//
+		add(userIn);
+		add(userId);
+		add(userPw);
+		add(userName);
+		add(userGender);
+		add(userBirth);
 		add(userNumber);
 		add(userEmail);
-		add(inpId); //
-		add(inpPw);//
-		add(inpName);//
-		add(inpBirth);//
+		add(inpId);
+		add(inpPw);
+		add(inpName);
+		add(inpBirth);
 		add(inpNumber);
 		add(inpEmail);
-		add(man);//
-		add(woman);//
-		add(pwBt);//
+		add(man);
+		add(woman);
+		add(pwBt);
 		add(endBt);
 		add(infomsg);
 
@@ -183,7 +185,6 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 		}
 
 		if (e.getActionCommand().equals("회원정보수정")) {
-			JoinDAO joinDao = new JoinDAO();
 			String gender = null;
 			if (man.getState()) {
 				gender = "남";
@@ -227,12 +228,15 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 				}
 
 				if (inpBirth.isEnabled() && inpNumber.isEnabled() && inpEmail.isEnabled()) {
-					joinDao.userInfoRevise(inpId.getText(), inppws, gender, inpBirth.getText(), inpNumber.getText(),
-							inpEmail.getText());
-					inpBirth.setEnabled(false);
-					inpNumber.setEnabled(false);
-					inpEmail.setEnabled(false);
-					infoDia("회원정보수정이 완료되었습니다.");
+					String p = joinDao.userInfoRevise(inpId.getText(), inppws, gender, inpBirth.getText(),
+							inpNumber.getText(), inpEmail.getText());
+					if (p.equals("완료")) {
+						inpBirth.setEnabled(false);
+						inpNumber.setEnabled(false);
+						inpEmail.setEnabled(false);
+						infoDia("회원정보수정이 완료되었습니다.");
+					}
+					infoDia("회원정보수정에 실패하었습니다.");
 				} else {
 					infoDia("비밀번호를 확인해주세요.");
 				}
