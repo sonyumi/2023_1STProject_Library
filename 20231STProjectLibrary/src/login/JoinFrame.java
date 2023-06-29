@@ -245,7 +245,6 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 					char a = insId.getText().charAt(i);
 					if (a >= 65 && a <= 90 || a >= 97 && a <= 122 || a >= 48 && a <= 57) {
 					} else {
-						// JoinDialog("아이디 중복확인을 해주세요.");
 						JoinDialogError("아이디에 특수문자는 사용할 수 없습니다.");
 						return; // 아이디에 영문숫자를 제외한 특수문자가 들어갈때
 					}
@@ -293,10 +292,15 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 				JoinDialogError("전화번호는 11자리 이하로 입력해주세요.");
 				return;
 			}
-
-			dao1.list(insId.getText(), tfpw, insName.getText(), rbge, insBirth.getText(), insPhone.getText(),
-					insEmail.getText());
-			JoinDialog("회원가입이 완료되었습니다.");
+			list = dao.list(tfId, "g_user");
+			li = dao.list(tfId, "manager");
+			if (list.isEmpty() && li.isEmpty()) {
+				dao1.list(insId.getText(), tfpw, insName.getText(), rbge, insBirth.getText(), insPhone.getText(),
+						insEmail.getText());
+				JoinDialog("회원가입이 완료되었습니다.");
+			} else {
+				JoinDialogError("아이디 중복체크를 해주세요.");
+			}
 		}
 		if (e.getActionCommand().equals("확인")) {
 			dia.dispose();

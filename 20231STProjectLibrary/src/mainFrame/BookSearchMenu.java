@@ -113,7 +113,6 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 					vo.getbReturn() };
 			col.addRow(row);
 		}
-
 		tb1.setModel(col);
 		add(listScroll);
 		listScroll.setBounds(35, 80, 512, 185);

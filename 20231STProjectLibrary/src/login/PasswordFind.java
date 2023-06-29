@@ -39,6 +39,7 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 		font2 = new Font("고딕", Font.PLAIN, 15);
 
 		pwFind.setSize(300, 350);
+		pwFind.addWindowListener(this);
 		pwFind.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
 		pwFind.setResizable(false);
 		pwFind.setLocationRelativeTo(null);

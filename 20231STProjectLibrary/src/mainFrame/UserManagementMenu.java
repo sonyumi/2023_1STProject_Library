@@ -354,7 +354,12 @@ public class UserManagementMenu extends JPanel implements ActionListener, MouseL
 		}
 
 		if (e.getActionCommand().equals("회원삭제")) {
-			infoWarningDia();
+			String nId = inpId.getText();
+			if (nId.isEmpty()) {
+				infoDialog("회원을 선택해주세요.");
+			} else {
+				infoWarningDia();
+			}
 		}
 		if (e.getActionCommand().equals("확인")) {
 			booklist.dispose();
@@ -420,41 +425,36 @@ public class UserManagementMenu extends JPanel implements ActionListener, MouseL
 						infoDialog("회원정보수정이 완료되었습니다.");
 					}
 				}
-			} catch (
-
-			Exception ex) {
+			} catch (Exception ex) {
 				infoDialog("회원정보를 바르게 입력해주세요.");
 			}
 		}
 
 		if (e.getActionCommand().equals("삭제하기")) {
 			String nId = inpId.getText();
-			if (nId.length() == 0) {
-				infoDialog("회원을 선택해주세요.");
+			String p = userBookDao.getDeleted(nId);
+			if (p.equals("삭제")) {
+				list = dao.list1(nId, 7);
+				dia.dispose();
+				infoDialog("회원 삭제가 완료되었습니다.");
+				inpId.setText("");
+				inpName.setText("");
+				inpBirth.setText("");
+				inpNumber.setText("");
+				man.setState(true);
+				woman.setState(false);
+				inpEmail.setText("");
+				return;
 			} else {
-				String p = userBookDao.getDeleted(nId);
-				if (p.equals("삭제")) {
-					list = dao.list1(nId, 7);
-					dia.dispose();
-					infoDialog("회원 삭제가 완료되었습니다.");
-					inpId.setText("");
-					inpName.setText("");
-					inpBirth.setText("");
-					inpNumber.setText("");
-					man.setState(true);
-					woman.setState(false);
-					inpEmail.setText("");
-					return;
-
-				} else {
-					dia.dispose();
-					infoDialog("빌린내역이 있으면 삭제할 수 없습니다.");
-					return;
-				}
+				dia.dispose();
+				infoDialog("빌린내역이 있으면 삭제할 수 없습니다.");
+				return;
 			}
 		}
 
-		if (e.getActionCommand().equals("대여목록")) {
+		if (e.getActionCommand().equals("대여목록"))
+
+		{
 			if (booklist.isShowing() == false) {
 				if (inpId.getText().length() != 0) {
 					list1 = userBookDao.list1(inpId.getText());
@@ -472,6 +472,7 @@ public class UserManagementMenu extends JPanel implements ActionListener, MouseL
 			}
 
 		}
+
 		userSearchTable1("all", 0);
 
 		if (e.getActionCommand().equals("검색")) {
