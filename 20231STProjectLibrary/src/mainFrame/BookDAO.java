@@ -77,7 +77,7 @@ public class BookDAO extends MemberDAO {
 					query += " AND BB.WRITER like'%" + code + "%'";
 				} else if (colnum == 4) {
 					query += " AND BB.PUBLISHER like'%" + code + "%'";
-				} 
+				}
 			}
 			System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
@@ -161,7 +161,7 @@ public class BookDAO extends MemberDAO {
 			if (code != null) {
 				if (table.equals("all")) {
 				} else if (table.equals("책코드")) {
-					query += " AND bb.book_code='" + code + "'";
+					query += " AND bb.book_code like '%" + code + "%'";
 				} else if (table.equals("책이름")) {
 					query += " AND bb.book_name LIKE '%" + code + "%'";
 				} else if (table.equals("저자")) {
@@ -259,7 +259,7 @@ public class BookDAO extends MemberDAO {
 				System.out.println();
 				char a = s.charAt(0);
 				if (n < 10) {
-					n+=1;
+					n += 1;
 					code = a + date + "0" + n;
 				} else if (n == 99) {
 					a += 1;
