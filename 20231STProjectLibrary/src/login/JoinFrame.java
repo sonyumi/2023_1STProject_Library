@@ -33,8 +33,8 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		birthText = new JLabel("*생년월일");
 		phoneText = new JLabel("*전화번호");
 		emailText = new JLabel("E-Mail");
-		phoneNumInfo = new JLabel("* - 는 제외하고 숫자만 입력해주세요.");
-		birInfoText = new JLabel("생년월일은 6자리로 입력해주세요.");
+		phoneNumInfo = new JLabel("※ - 는 제외하고 숫자만 입력해주세요.");
+		birInfoText = new JLabel("※생년월일은 6자리로 입력해주세요.");
 		insId = new JTextField();
 		insPw = new JPasswordField();
 		insName = new JTextField();
@@ -51,10 +51,10 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		bg.add(gender[0]);
 		bg.add(gender[1]);
 
-		font = new Font("고딕", Font.PLAIN, 30);
-		font1 = new Font("고딕", Font.PLAIN, 17);
-		font2 = new Font("고딕", Font.PLAIN, 15);
-		font3 = new Font("고딕", Font.PLAIN, 13);
+		font = new Font("맑은고딕", Font.PLAIN, 30);
+		font1 = new Font("맑은고딕", Font.PLAIN, 17);
+		font2 = new Font("맑은고딕", Font.PLAIN, 15);
+		font3 = new Font("맑은고딕", Font.PLAIN, 13);
 
 		join.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
 		join.setSize(400, 500);
@@ -119,7 +119,8 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		insPhone.setFont(font1);
 
 		join.add(phoneNumInfo);
-		phoneNumInfo.setBounds(80, 340, 220, 15);
+		phoneNumInfo.setBounds(110, 340, 220, 15);
+		phoneNumInfo.setFont(new Font("맑은고딕", Font.PLAIN, 9));
 
 		join.add(emailText);
 		emailText.setBounds(55, 368, 80, 20);
@@ -159,7 +160,8 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 
 		join.add(birInfoText);
 		join.addWindowListener(this);
-		birInfoText.setBounds(0, 0, 0, 0);
+		birInfoText.setBounds(110, 292, 150, 10);
+		birInfoText.setFont(new Font("맑은고딕", Font.PLAIN, 9));
 
 		join.setVisible(true);
 	}
