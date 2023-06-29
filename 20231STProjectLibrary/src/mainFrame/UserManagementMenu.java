@@ -382,6 +382,10 @@ public class UserManagementMenu extends JPanel implements ActionListener, MouseL
 				gender = "여";
 			}
 			try {
+				if(inpId.getText().isEmpty()) {
+					infoDialog("회원을 선택해주세요.");
+					return;
+				}
 				if (inpBirth.getText().isEmpty()) {
 					infoDialog("생년월일을 입력해주세요.");
 					return;
@@ -419,9 +423,6 @@ public class UserManagementMenu extends JPanel implements ActionListener, MouseL
 					String p = joinDao.userInfoRevise1(inpId.getText(), inpName.getText(), gender, inpBirth.getText(),
 							inpNumber.getText(), inpEmail.getText());
 					if (p.equals("완료")) {
-						inpBirth.setEnabled(false);
-						inpNumber.setEnabled(false);
-						inpEmail.setEnabled(false);
 						infoDialog("회원정보수정이 완료되었습니다.");
 					}
 				}

@@ -70,14 +70,14 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		searchGroup = new CheckboxGroup();
 		search = new JLabel("도서검색");
 		mapBt = new Button("위치확인");
-		bookcode = new Checkbox("북코드", searchGroup, true);
+		bookcode = new Checkbox("책코드", searchGroup, true);
 		bookname = new Checkbox("책이름", searchGroup, true);
 		bookwriter = new Checkbox("저자", searchGroup, true);
 		publisher = new Checkbox("출판사", searchGroup, true);
 		inpSearch = new JTextField();
 		searchBt = new Button("검색");
 		font1 = new Font("고딕", Font.BOLD, 15);
-		
+
 		add(inpSearch);
 		add(searchBt);
 		inpSearch.setBounds(105, 35, 150, 30);
@@ -91,7 +91,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		add(bookname);
 		add(bookwriter);
 		add(publisher);
-		
+
 		bookcode.setBounds(60, 15, 50, 12);
 		bookname.setBounds(120, 15, 50, 12);
 		bookwriter.setBounds(180, 15, 40, 12);
@@ -169,7 +169,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		add(borderLine2);
 		borderLine2.setBorder(bb);
 		borderLine2.setBounds(35, 370, 490, 135);
-		info.setText("※ 북코드로 대여/반납이 가능합니다. ");
+		info.setText("※ 책코드로 대여/반납이 가능합니다. ");
 		info.setFont(font2);
 		rentalBook.setBounds(60, 299, 50, 12);
 		returnBook.setBounds(120, 299, 50, 12);
@@ -267,7 +267,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		dia.setBounds(screenSize.width / 2 - 150, screenSize.height / 2 - 75, 300, 150);
 		diaBt.addActionListener(this);
 		diaBt.setBounds(125, 102, 50, 25);
-		diaInfo.setBounds(55, 50, 185, 30);
+		diaInfo.setBounds(35, 50, 225, 30);
 		dia.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (e.getComponent() == infoFrame) {
@@ -323,28 +323,22 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 					tb2.setVisible(false);
 					value = userDao.getReturnValue(bookCode, 0, userInfo.getId());
 					if (value.equals("성공")) {
-						// 대여 성공 창 띄우기
 						bookRentalDialog("책 대여가 완료되었습니다.");
-
 					} else if (value.equals("없음")) {
 						bookRentalDialog("이미 대여된 책 입니다.");
 					} else {
-						System.out.println("대여에 실패하였습니다.");
 						bookRentalDialog("대여에 실패하였습니다.");
 
 					}
 				} else if (inpbookCode.getText().length() != 0 && returnBook.getState()) {
 					value = userDao.getReturnValue(bookCode, 1, userInfo.getId());
-					System.out.println(value);
 					if (value.equals("성공")) {
 
 						// 반납 성공 창 띄우기
-						System.out.println("반납성공");
 						bookRentalDialog("책 반납이 완료되었습니다.");
 
 					} else if (value.equals("없음")) {
 						// 북 코드값이 잘못되엇습니다 창 띄우기
-						System.out.println("북 코드값 에러");
 						bookRentalDialog("대여처리가 안 된 책입니다.");
 					} else {
 						System.out.println("반납실패");
@@ -354,8 +348,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 				}
 
 			} catch (Exception ee) {
-				System.out.println("올바른 북 코드값을 입력해 주세요");
-				bookRentalDialog("올바른 북 코드값을 입력해 주세요.");
+				bookRentalDialog("올바른 책코드값을 입력해 주세요.");
 			}
 			rentalTable();
 			tb2.setVisible(true);

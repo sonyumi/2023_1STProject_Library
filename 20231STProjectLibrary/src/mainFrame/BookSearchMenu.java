@@ -347,33 +347,30 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 			if (imglink1 == null) {
 				imglink1 = "";
 			}
-			// try {
-			if (code1.length() == 0) {
-				infoDialog("책 코드를 입력해주세요.");
-			} else if (code1.length() > 12) {
-				infoDialog("책 길이는 11자 이내로 입력해주세요.");
-			} else if (code1.equals(list.get(tb1.getSelectedRow()).getCode()) == false) {
-				infoDialog("책 코드는 수정 할 수 없습니다.");
-			} else if (name1.length() == 0) {
-				infoDialog("책 이름을 입력해주세요.");
-			} else if (writer1.length() == 0) {
-				infoDialog("저자를 입력해주세요.");
-			} else if (publisher1.length() == 0) {
-				infoDialog("출판사를 입력해주세요.");
-			} else {
-				System.out.println("-----------------");
-				System.out.println(code1);
-				System.out.println(name1);
-				System.out.println(writer1);
-				System.out.println(publisher1);
-				System.out.println(position1);
-				System.out.println(imglink1);
-				list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 0);
-				infoDialog("책 수정이 완료되었습니다.");
+			try {
+				if (code1.length() > 12) {
+					infoDialog("책코드는 11자 이내로 입력해주세요.");
+				} else if (name1.length() == 0) {
+					infoDialog("책이름을 입력해주세요.");
+				} else if (writer1.length() == 0) {
+					infoDialog("저자를 입력해주세요.");
+				} else if (publisher1.length() == 0) {
+					infoDialog("출판사를 입력해주세요.");
+				} else {
+					System.out.println("-----------------");
+					System.out.println(code1);
+					System.out.println(name1);
+					System.out.println(writer1);
+					System.out.println(publisher1);
+					System.out.println(position1);
+					System.out.println(imglink1);
+					list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 0);
+					infoDialog("책 수정이 완료되었습니다.");
+				}
+			} catch (Exception ee) {
+				ee.printStackTrace();
+				infoDialog("책을 수정할 수 없습니다.");
 			}
-			// } catch (Exception ee) {
-			// infoDialog("책을 수정할 수 없습니다.");
-			// }
 			bookSearchTable2("all", "all");
 			tb1.setVisible(true);
 		}
