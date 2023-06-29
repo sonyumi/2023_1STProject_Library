@@ -154,9 +154,9 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		borderLine2 = new JLabel();
 //		returnBt = new Button("반납");
 		info = new JLabel();
-		voidLabel = new JLabel("대출반납");
+		voidLabel = new JLabel("대여반납");
 		bookGroup = new CheckboxGroup();
-		rentalBook = new Checkbox("대출", bookGroup, true);
+		rentalBook = new Checkbox("대여", bookGroup, true);
 		returnBook = new Checkbox("반납", bookGroup, true);
 		font2 = new Font("맑은고딕", Font.PLAIN, 12);
 		add(rentalBook);
@@ -253,7 +253,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		infoMapFrame.setVisible(true);
 	}
 
-	// 대출/반납 성공/실패 dialog 창
+	// 대여/반납 성공/실패 dialog 창
 	public void bookRentalDialog(String s) {
 		dia = new Dialog(dia);
 		diaBt = new Button("닫기");
@@ -323,14 +323,14 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 					tb2.setVisible(false);
 					value = userDao.getReturnValue(bookCode, 0, userInfo.getId());
 					if (value.equals("성공")) {
-						// 대출 성공 창 띄우기
-						bookRentalDialog("책 대출이 완료되었습니다.");
+						// 대여 성공 창 띄우기
+						bookRentalDialog("책 대여가 완료되었습니다.");
 
 					} else if (value.equals("없음")) {
-						bookRentalDialog("이미 대출된 책 입니다.");
+						bookRentalDialog("이미 대여된 책 입니다.");
 					} else {
-						System.out.println("대출에 실패하였습니다.");
-						bookRentalDialog("대출에 실패하였습니다.");
+						System.out.println("대여에 실패하였습니다.");
+						bookRentalDialog("대여에 실패하였습니다.");
 
 					}
 				} else if (inpbookCode.getText().length() != 0 && returnBook.getState()) {
@@ -345,7 +345,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 					} else if (value.equals("없음")) {
 						// 북 코드값이 잘못되엇습니다 창 띄우기
 						System.out.println("북 코드값 에러");
-						bookRentalDialog("대출처리가 안 된 책입니다.");
+						bookRentalDialog("대여처리가 안 된 책입니다.");
 					} else {
 						System.out.println("반납실패");
 						bookRentalDialog("반납에 실패하였습니다.");
