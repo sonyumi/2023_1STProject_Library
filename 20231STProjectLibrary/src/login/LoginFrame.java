@@ -46,7 +46,7 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		grid2 = new JButton();
 		idFind = new JButton("아이디찾기");
 		pwFind = new JButton("비밀번호찾기");
-		mainTitle = new JLabel("도서관 대출/반납 시스템");
+		mainTitle = new JLabel("도서관 대여/반납 시스템");
 		idText = new JLabel("ID");
 		pwText = new JLabel("PW");
 		imgArea = new JLabel();
