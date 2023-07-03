@@ -6,7 +6,10 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -20,7 +23,8 @@ public class MainMenu extends JPanel implements ActionListener {
 	private JLabel userText, bestBookText, bookFrame, book1, book1Text1, book2, book2Text1, book3, book3Text1, book4,
 			book4Text1, book5, book5Text1, book6, book6Text1, grid1, grid2, grid3;
 	private Button privious, next;
-	private BookDAO dao;
+	private BookDAO dao = new BookDAO();
+	private ArrayList<BookVo> list;
 	private ArrayList<String> codeList;
 	private ArrayList<String> imgList;
 	private ArrayList<String> nameList;
@@ -30,9 +34,12 @@ public class MainMenu extends JPanel implements ActionListener {
 	private Font font1, font2;
 
 	public MainMenu(MemberVo userInfo) {
+		DateFormat dateFormat = new SimpleDateFormat("dd");
+		Date date = new Date();
+		String sDay = dateFormat.format(date);
 		font1 = new Font("고딕", Font.BOLD, 23);
 		font2 = new Font("고딕", Font.PLAIN, 15);
-		bestBookText = new JLabel("이 달의 베스트셀러");
+		bestBookText = new JLabel("");
 		userText = new JLabel();
 		privious = new Button("< 이전");
 		next = new Button("다음 >");
@@ -43,6 +50,29 @@ public class MainMenu extends JPanel implements ActionListener {
 		add(userText);
 		add(privious);
 		add(next);
+		int day = Integer.parseInt(sDay);
+		list = dao.list(day);
+		// 15일 이전일경우 랜덤 추천도서
+		if (day < 15 || list.get(6).getId() == null) {
+			int i = 0;
+			bestBookText.setText("추천도서");
+			while (true) {
+				for (BookVo vo : list) {
+					if (list.get(0).getName().equals(vo.getName())) {
+						i++;
+					}
+				}
+				if (i > 1) {
+					list = dao.list(day);
+				} else {
+					
+					break;
+				}
+			}
+
+		} else {
+			bestBookText.setText("이달의 베스트셀러");
+		}
 
 		userText.setText(userInfo.getName() + " 님 어서오세요 :D");
 		userText.setBounds(400, 20, 165, 15);
@@ -56,6 +86,7 @@ public class MainMenu extends JPanel implements ActionListener {
 		next.addActionListener(this);
 		next.setBounds(340, 420, 50, 30);
 		grid();
+		setBookcode();
 		book1();
 		book2();
 		book3();
@@ -73,9 +104,13 @@ public class MainMenu extends JPanel implements ActionListener {
 				book1Text1.setVisible(false);
 				book2Text1.setVisible(false);
 				book3Text1.setVisible(false);
-				book4();
-				book5();
-				book6();
+				book4.setVisible(true);
+				book5.setVisible(true);
+				book6.setVisible(true);
+				book4Text1.setVisible(true);
+				book5Text1.setVisible(true);
+				book6Text1.setVisible(true);
+
 			} else {
 				book4.setVisible(false);
 				book5.setVisible(false);
@@ -120,8 +155,6 @@ public class MainMenu extends JPanel implements ActionListener {
 	}
 
 	public void setBookcode() {
-		dao = new BookDAO();
-		ArrayList<BookVo> list = dao.list(6);
 		codeList = new ArrayList<String>();
 		nameList = new ArrayList<String>();
 		imgList = new ArrayList<String>();
@@ -129,7 +162,6 @@ public class MainMenu extends JPanel implements ActionListener {
 		publisherList = new ArrayList<String>();
 
 		BookVo data;
-
 		// 베스트셀러 상위 6위 책 코드값, 이미지값
 		for (int i = 0; i < 6; i++) {
 			data = (BookVo) list.get(i);
@@ -163,10 +195,9 @@ public class MainMenu extends JPanel implements ActionListener {
 	}
 
 	public void book1() {
-		setBookcode();
+
 		book1 = new JLabel();
-		book1Text1 = new JLabel(
-				"<html><body style='text-align:center;'>1. " + nameList.get(0));
+		book1Text1 = new JLabel("<html><body style='text-align:center;'>1. " + nameList.get(0));
 		add(book1);
 		add(book1Text1);
 		book1Text1.setBounds(80, 350, 120, 50);
@@ -179,7 +210,7 @@ public class MainMenu extends JPanel implements ActionListener {
 	}
 
 	public void book2() {
-		setBookcode();
+
 		book2 = new JLabel();
 		book2Text1 = new JLabel();
 		add(book2);
@@ -194,7 +225,7 @@ public class MainMenu extends JPanel implements ActionListener {
 	}
 
 	public void book3() {
-		setBookcode();
+
 		book3 = new JLabel();
 		book3Text1 = new JLabel();
 		add(book3);

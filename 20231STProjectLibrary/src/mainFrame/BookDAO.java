@@ -89,7 +89,7 @@ public class BookDAO extends MemberDAO {
 			if (rs.getRow() == 0) {
 				// 입력된 아이디 값과 일치하는 데이터가 없을때(로그인실패)
 			} else {
-				System.out.println(rs.getRow()); // 현재 커서 값 출력
+				// System.out.println(rs.getRow()); // 현재 커서 값 출력
 				rs.beforeFirst(); // 커서를 0번으로 돌리기
 				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
 					String bCode = rs.getString("book_code"); // 북코드 저장
@@ -137,7 +137,7 @@ public class BookDAO extends MemberDAO {
 					rs = stmt.executeQuery(query);
 					query = "DELETE booklist WHERE book_code = '" + code + "'";
 				}
-				System.out.println("SQL : " + query);
+				// System.out.println("SQL : " + query);
 				rs = stmt.executeQuery(query); // 쿼리 실행문
 			}
 
@@ -218,9 +218,23 @@ public class BookDAO extends MemberDAO {
 			System.out.println("rs.getRow() : " + rs.getRow());
 			// rs.getRow() == 현재 커서가 가리키고 있는 row 번호 리턴
 
-			// 커서 번호가 0인경우 (테이블에 조회할 레코드가 없을경우)
-			if (rs.getRow() == 0) {
-				// 입력된 아이디 값과 일치하는 데이터가 없을때
+			if (i<15 || rs.getRow()==0) {
+				query = "select * from (\r\n" + "    select * from BOOKLIST b  order by DBMS_RANDOM.RANDOM)\r\n"
+						+ "where rownum <= 6";
+				rs = stmt.executeQuery(query);
+				System.out.println("SQL : " + query);
+				rs.beforeFirst();
+				while (rs.next()) { // 커서를 다음으로 이동, 데이터가 없을시 false
+					String bCode = rs.getString("book_code");
+					String bName = rs.getString("book_name");
+					String bWirter = rs.getString("writer");
+					String bPublisher = rs.getString("publisher");
+					String bImg = rs.getString("image");
+					BookVo data = new BookVo(bCode, bName, bWirter, bPublisher, bImg); // BookVo(값 불러오는 클래스) 타입의
+					// 변수생성(쿼리문을 저장하기위함)
+					list.add(data);// 리스트에 값 저장
+				}
+				list.add(6, new BookVo());
 			} else {
 				System.out.println(rs.getRow()); // 현재 커서 값 출력
 				rs.previous(); // 커서를 0번으로 돌리기 (0번부터 조회)
@@ -234,10 +248,12 @@ public class BookDAO extends MemberDAO {
 					// 변수생성(쿼리문을 저장하기위함)
 					list.add(data);// 리스트에 값 저장
 				}
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return list;
 	}
 

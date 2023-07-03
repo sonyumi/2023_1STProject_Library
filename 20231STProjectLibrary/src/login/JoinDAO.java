@@ -25,7 +25,6 @@ public class JoinDAO extends MemberDAO {
 				query += " VALUES (" + "'" + id + "'," + "'" + pw + "'," + "'" + name + "'," + "'" + gender + "'," + "'"
 						+ number + "'," + "'" + birth + "'," + "'" + email + "')";
 			}
-			System.out.println("SQL : " + query);
 			super.rs = super.stmt.executeQuery(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -50,8 +49,6 @@ public class JoinDAO extends MemberDAO {
 				query += " WHERE id='" + id + "'";
 				value = "완료";
 			}
-			System.out.println("SQL : " + query);
-			System.out.println(value);
 			super.rs = super.stmt.executeQuery(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,8 +73,6 @@ public class JoinDAO extends MemberDAO {
 				query += " WHERE id='" + id + "'";
 				value = "완료";
 			}
-			System.out.println("SQL : " + query);
-			System.out.println(value);
 			super.rs = super.stmt.executeQuery(query);
 		} catch (SQLException e) {
 			e.printStackTrace();

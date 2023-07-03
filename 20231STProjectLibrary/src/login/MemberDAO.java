@@ -22,15 +22,15 @@ public class MemberDAO {
 
 		try {
 			Class.forName(driver); // 드라이버 연결 메소드 ,ClassNotFoundException 예외 해줘야함
-			System.out.println("JDBC driver loading success."); // 연결이 완료되면 에러가 뜨지않고 프린트 메세지가 뜸
+			//System.out.println("JDBC driver loading success."); // 연결이 완료되면 에러가 뜨지않고 프린트 메세지가 뜸
 			con = DriverManager.getConnection(url, user, password); // SQLException 예외 해줘야됨, 오라클과 연결하는 구문 Connection
-			System.out.println("oracle connection success."); // 오라클 연결이 완료되면 뜨는 메세지
+			//System.out.println("oracle connection success."); // 오라클 연결이 완료되면 뜨는 메세지
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			// TYPE_SCROLL_SENSITIVE 커서를 자유롭게 이동가능하게 해줌
 			// CONCUR_UPDATABLE 데이터 변경이 가능하도록 해줌
 			// (커서를) rs.next() 다음위치로, rs.previous() 이전위치로
 			// rs.beforeFirst() 처음위치로 , rs.afterLast() 마지막 위치로
-			System.out.println("statement create success.");
+		//	System.out.println("statement create success.");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -50,10 +50,10 @@ public class MemberDAO {
 				// 쿼리에 조건을 더해줌
 				query += " where id='" + id + "' and name='" + name + "' and p_number='" + num + "'";
 			}
-			System.out.println("SQL : " + query);
+		//	System.out.println("SQL : " + query);
 			rs = stmt.executeQuery(query);
 			rs.last(); // 커서를 마지막으로 이동
-			System.out.println("rs.getRow() : " + rs.getRow());
+		//	System.out.println("rs.getRow() : " + rs.getRow());
 			// rs.getRow() == 현재 커서가 가리키고 있는 row 번호 리턴
 
 			// 커서 번호가 0인경우 (테이블에 조회할 레코드가 없을경우)

@@ -333,6 +333,7 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 			inpPublisher.setText("");
 			positionA.select(0);
 			positionB.select(0);
+			inpImage.setIcon(null);
 		}
 
 		if (e.getActionCommand().equals("이미지첨부")) {
