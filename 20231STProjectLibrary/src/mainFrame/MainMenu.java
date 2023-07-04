@@ -20,29 +20,21 @@ import login.MemberVo;
 
 @SuppressWarnings("serial")
 public class MainMenu extends JPanel implements ActionListener {
-	private JLabel userText, bestBookText, bookFrame, book1, book1Text1, book2, book2Text1, book3, book3Text1, book4,
-			book4Text1, book5, book5Text1, book6, book6Text1, grid1, grid2, grid3;
-	private Button privious, next;
+	private JLabel[] book, bookText;
 	private BookDAO dao = new BookDAO();
 	private ArrayList<BookVo> list;
-	private ArrayList<String> codeList;
-	private ArrayList<String> imgList;
-	private ArrayList<String> nameList;
-	private ArrayList<String> wirterList;
-	private ArrayList<String> publisherList;
-	private LineBorder bb;
-	private Font font1, font2;
 
 	public MainMenu(MemberVo userInfo) {
 		DateFormat dateFormat = new SimpleDateFormat("dd");
 		Date date = new Date();
 		String sDay = dateFormat.format(date);
-		font1 = new Font("고딕", Font.BOLD, 23);
-		font2 = new Font("고딕", Font.PLAIN, 15);
-		bestBookText = new JLabel("");
-		userText = new JLabel();
-		privious = new Button("< 이전");
-		next = new Button("다음 >");
+		Font font1 = new Font("고딕", Font.BOLD, 23);
+		Font font2 = new Font("고딕", Font.PLAIN, 15);
+		JLabel bestBookText = new JLabel("");
+		JLabel userText = new JLabel();
+		Button privious = new Button("< 이전");
+		Button next = new Button("다음 >");
+		LineBorder bb = new LineBorder(Color.black, 1, true);
 
 		setLayout(null);
 
@@ -85,203 +77,101 @@ public class MainMenu extends JPanel implements ActionListener {
 		privious.setBounds(190, 420, 50, 30);
 		next.addActionListener(this);
 		next.setBounds(340, 420, 50, 30);
-		grid();
-		setBookcode();
-		book1();
-		book2();
-		book3();
-		System.out.println(userInfo.getId());
-		System.out.println(userInfo.getName());
-	}
 
+		JLabel[] grid = new JLabel[4];
+		for (int i = 0; i < grid.length; i++) {
+			grid[i] = new JLabel();
+			add(grid[i]);
+			grid[i].setBorder(bb);
+
+		}
+
+		grid[3].setBounds(30, 80, 520, 400); // 전체영역
+		grid[0].setBounds(65, 145, 135, 200); // 책영역1
+		grid[1].setBounds(227, 145, 135, 200); // 책영역2
+		grid[2].setBounds(385, 145, 135, 200); // 책영역3
+
+		book();
+		for (int i = 0, j = 3; i < 3 && j < 6; i++, j++) {
+			book[j].setVisible(false);
+			bookText[j].setVisible(false); // 4,5,6번 책 이미지,책 이름 숨기기
+			book[i].setVisible(true);
+			bookText[i].setVisible(true); // 1,2,3번 책 이미지,책 이름 보이기
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("< 이전")) {
-			if (book1.isVisible()) {
-				book1.setVisible(false);
-				book2.setVisible(false);
-				book3.setVisible(false);
-				book1Text1.setVisible(false);
-				book2Text1.setVisible(false);
-				book3Text1.setVisible(false);
-				book4.setVisible(true);
-				book5.setVisible(true);
-				book6.setVisible(true);
-				book4Text1.setVisible(true);
-				book5Text1.setVisible(true);
-				book6Text1.setVisible(true);
-
+			if (book[0].isVisible()) { // 첫번째 책이 보여지고있는 경우
+				for (int i = 0, j = 3; i < 3 && j < 6; i++, j++) {
+					book[i].setVisible(false);
+					bookText[i].setVisible(false); // 1,2,3번 책 이미지,책 이름 숨기기
+					book[j].setVisible(true);
+					bookText[j].setVisible(true); // 4,5,6번 책 이미지,책 이름 보이기
+				}
 			} else {
-				book4.setVisible(false);
-				book5.setVisible(false);
-				book6.setVisible(false);
-				book4Text1.setVisible(false);
-				book5Text1.setVisible(false);
-				book6Text1.setVisible(false);
-				book1.setVisible(true);
-				book2.setVisible(true);
-				book3.setVisible(true);
-				book1Text1.setVisible(true);
-				book2Text1.setVisible(true);
-				book3Text1.setVisible(true);
+				for (int i = 0, j = 3; i < 3 && j < 6; i++, j++) {
+					book[j].setVisible(false);
+					bookText[j].setVisible(false); // 4,5,6번 책 이미지,책 이름 숨기기
+					book[i].setVisible(true);
+					bookText[i].setVisible(true); // 1,2,3번 책 이미지,책 이름 보이기
+				}
 			}
 		}
 		if (e.getActionCommand().equals("다음 >")) {
-			if (book1.isVisible()) {
-				book1.setVisible(false);
-				book2.setVisible(false);
-				book3.setVisible(false);
-				book1Text1.setVisible(false);
-				book2Text1.setVisible(false);
-				book3Text1.setVisible(false);
-				book4();
-				book5();
-				book6();
+			if (book[0].isVisible()) { // 첫번째 책이 보여지고있는 경우
+				for (int i = 0, j = 3; i < 3 && j < 6; i++, j++) {
+					book[i].setVisible(false);
+					bookText[i].setVisible(false); // 1,2,3번 책 이미지,책 이름 숨기기
+					book[j].setVisible(true);
+					bookText[j].setVisible(true); // 4,5,6번 책 이미지,책 이름 보이기
+				}
 			} else {
-				book4.setVisible(false);
-				book5.setVisible(false);
-				book6.setVisible(false);
-				book4Text1.setVisible(false);
-				book5Text1.setVisible(false);
-				book6Text1.setVisible(false);
-				book1.setVisible(true);
-				book2.setVisible(true);
-				book3.setVisible(true);
-				book1Text1.setVisible(true);
-				book2Text1.setVisible(true);
-				book3Text1.setVisible(true);
+				for (int i = 0, j = 3; i < 3 && j < 6; i++, j++) {
+					book[j].setVisible(false);
+					bookText[j].setVisible(false); // 4,5,6번 책 이미지,책 이름 숨기기
+					book[i].setVisible(true);
+					bookText[i].setVisible(true); // 1,2,3번 책 이미지,책 이름 보이기
+				}
 			}
 		}
 	}
 
-	public void setBookcode() {
-		codeList = new ArrayList<String>();
-		nameList = new ArrayList<String>();
-		imgList = new ArrayList<String>();
-		wirterList = new ArrayList<String>();
-		publisherList = new ArrayList<String>();
+	public void book() {
 
-		BookVo data;
-		// 베스트셀러 상위 6위 책 코드값, 이미지값
-		for (int i = 0; i < 6; i++) {
-			data = (BookVo) list.get(i);
-			codeList.add(data.getCode());
-			nameList.add(data.getName());
-			wirterList.add(data.getWriter());
-			publisherList.add(data.getPublisher());
-			imgList.add(data.getImgLink());
+		book = new JLabel[6];
+		bookText = new JLabel[6];
+
+		for (int i = 0; i < book.length; i++) {
+			book[i] = new JLabel();
+			bookText[i] = new JLabel();
+			add(book[i]);
+			add(bookText[i]);
+			bookText[i].setText("<html><body style='text-align:center;'>" + (i + 1) + ". " + list.get(i).getName());
+			ImageIcon img = new ImageIcon(list.get(i).getImgLink());
+			Image icon = img.getImage();
+			Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
+			book[i].setIcon(new ImageIcon(changeImg));
 		}
-	}
 
-	public void grid() {
-		bb = new LineBorder(Color.black, 1, true);
-		grid1 = new JLabel();
-		grid2 = new JLabel();
-		grid3 = new JLabel();
-		bookFrame = new JLabel();
-		bookFrame.setBorder(bb);
-		add(bookFrame);
-		bookFrame.setBounds(30, 80, 520, 400);
-		add(grid1);
-		grid1.setBounds(65, 145, 135, 200);
-		grid1.setBorder(bb);
-		add(grid2);
-		grid2.setBounds(227, 145, 135, 200);
-		grid2.setBorder(bb);
-		add(grid3);
-		grid3.setBounds(385, 145, 135, 200);
-		grid3.setBorder(bb);
+		bookText[0].setBounds(80, 350, 120, 50);
+		book[0].setBounds(70, 150, 125, 190);
 
-	}
+		bookText[1].setBounds(240, 350, 120, 50);
+		book[1].setBounds(232, 150, 125, 190);
 
-	public void book1() {
+		bookText[2].setBounds(400, 350, 120, 50);
+		book[2].setBounds(390, 150, 125, 190);
 
-		book1 = new JLabel();
-		book1Text1 = new JLabel("<html><body style='text-align:center;'>1. " + nameList.get(0));
-		add(book1);
-		add(book1Text1);
-		book1Text1.setBounds(80, 350, 120, 50);
-		ImageIcon img = new ImageIcon(imgList.get(0));
-		Image icon = img.getImage();
-		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
-		book1.setIcon(new ImageIcon(changeImg));
-		book1.setBounds(70, 150, 125, 190);
+		bookText[3].setBounds(80, 350, 120, 50);
+		book[3].setBounds(70, 150, 125, 190);
 
-	}
+		bookText[4].setBounds(240, 350, 120, 50);
+		book[4].setBounds(232, 150, 125, 190);
 
-	public void book2() {
-
-		book2 = new JLabel();
-		book2Text1 = new JLabel();
-		add(book2);
-		add(book2Text1);
-		book2Text1.setText("<html><body style='text-align:center;'>2. " + nameList.get(1));
-		book2Text1.setBounds(240, 350, 120, 50);
-		ImageIcon img = new ImageIcon(imgList.get(1));
-		Image icon = img.getImage();
-		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
-		book2.setIcon(new ImageIcon(changeImg));
-		book2.setBounds(232, 150, 125, 190);
-	}
-
-	public void book3() {
-
-		book3 = new JLabel();
-		book3Text1 = new JLabel();
-		add(book3);
-		add(book3Text1);
-		book3Text1.setBounds(400, 350, 120, 50);
-		book3Text1.setText("<html><body style='text-align:center;'>3. " + nameList.get(2));
-		ImageIcon img = new ImageIcon(imgList.get(2));
-		Image icon = img.getImage();
-		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
-		book3.setIcon(new ImageIcon(changeImg));
-		book3.setBounds(390, 150, 125, 190);
-	}
-
-	public void book4() {
-		setBookcode();
-		book4 = new JLabel();
-		book4Text1 = new JLabel();
-		add(book4);
-		add(book4Text1);
-		book4Text1.setBounds(80, 350, 120, 50);
-		book4Text1.setText("<html><body style='text-align:center;'>4. " + nameList.get(3));
-		ImageIcon img = new ImageIcon(imgList.get(3));
-		Image icon = img.getImage();
-		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
-		book4.setIcon(new ImageIcon(changeImg));
-		book4.setBounds(70, 150, 125, 190);
-	}
-
-	public void book5() {
-		setBookcode();
-		book5 = new JLabel();
-		book5Text1 = new JLabel();
-		add(book5);
-		add(book5Text1);
-		book5Text1.setBounds(240, 350, 120, 50);
-		book5Text1.setText("<html><body style='text-align:center;'>5. " + nameList.get(4));
-		ImageIcon img = new ImageIcon(imgList.get(4));
-		Image icon = img.getImage();
-		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
-		book5.setIcon(new ImageIcon(changeImg));
-		book5.setBounds(232, 150, 125, 190);
-	}
-
-	public void book6() {
-		setBookcode();
-		book6 = new JLabel();
-		book6Text1 = new JLabel();
-		add(book6);
-		add(book6Text1);
-		book6Text1.setBounds(400, 350, 120, 50);
-		book6Text1.setText("<html><body style='text-align:center;'>6. " + nameList.get(5));
-		ImageIcon img = new ImageIcon(imgList.get(5));
-		Image icon = img.getImage();
-		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
-		book6.setIcon(new ImageIcon(changeImg));
-		book6.setBounds(390, 150, 125, 190);
+		bookText[5].setBounds(400, 350, 120, 50);
+		book[5].setBounds(390, 150, 125, 190);
 	}
 
 }
