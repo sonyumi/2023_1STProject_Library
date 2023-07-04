@@ -99,7 +99,7 @@ public class MainMenu extends JPanel implements ActionListener {
 			bookText[i].setVisible(true); // 1,2,3번 책 이미지,책 이름 보이기
 		}
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("< 이전")) {

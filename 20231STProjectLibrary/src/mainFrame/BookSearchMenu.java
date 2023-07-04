@@ -35,45 +35,37 @@ import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class BookSearchMenu extends JPanel implements ActionListener, MouseListener {
-	private JTextField inpBookSearch, inpBookCode, inpBookName, inpWriter, inpPublisher;
-	private JLabel bookSearch, borderLine1, borderLine2, bookInfo, infoBookCode, infoBookName, infoWriter,
-			infoPublisher, infoPosition, infoLabel, inpImage, infoDia;
-	private Button searchBt, modifyBt, addBt, deleteBt, imgAddBt, infoButton, nullBt, diaBt, diaDeleteBt;
+	private JTextField[] search;
+	private JLabel inpImage, infoDia;
+	private Button infoButton, diaBt, diaDeleteBt;
 	private Choice positionA, positionB;
 	private Checkbox bookcode, bookname, bookwriter, publisher;
-	private CheckboxGroup searchGroup;
 	private ArrayList<BookVo> list;
 	private BookDAO dao = new BookDAO();
 	private JTable tb1 = new JTable();
 	private JScrollPane listScroll = new JScrollPane(tb1);
 	private DefaultTableModel col;
-	private Font font1, font2, font3;
-	private String code = null;
-	private String table = "all";
-	private LineBorder bb = new LineBorder(Color.black, 1, true);
 	private String imglink = null;
 	private MainFrame mf = new MainFrame();
 	private Dialog dia;
 
 	public BookSearchMenu() {
-//		ArrayList<BookVo> list = dao.list(code);
-		font1 = new Font("맑은고딕", Font.BOLD, 20);
-		font2 = new Font("맑은고딕", Font.BOLD, 13);
-		font3 = new Font("맑은고딕", Font.PLAIN, 13);
-		bookSearch = new JLabel("도서검색");
-		inpBookSearch = new JTextField();
-		searchBt = new Button("검색");
-		searchGroup = new CheckboxGroup();
+		LineBorder bb = new LineBorder(Color.black, 1, true);
+		Font font1 = new Font("맑은고딕", Font.BOLD, 20);
+		Font font2 = new Font("맑은고딕", Font.BOLD, 13);
+		Font font3 = new Font("맑은고딕", Font.PLAIN, 13);
+		JLabel bookSearch = new JLabel("도서검색");
+		Button searchBt = new Button("검색");
+		CheckboxGroup searchGroup = new CheckboxGroup();
 		bookcode = new Checkbox("책코드", searchGroup, true);
 		bookname = new Checkbox("책이름", searchGroup, true);
 		bookwriter = new Checkbox("저자", searchGroup, true);
 		publisher = new Checkbox("출판사", searchGroup, true);
-		borderLine1 = new JLabel();
+		JLabel borderLine1 = new JLabel();
 
 		setLayout(null);
 
 		add(bookSearch);
-		add(inpBookSearch);
 		add(searchBt);
 		add(bookcode);
 		add(bookname);
@@ -91,74 +83,36 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		searchBt.setBounds(360, 35, 50, 30);
 		searchBt.addActionListener(this);
 
-		inpBookSearch.setBounds(155, 37, 200, 30);
-
 		borderLine1.setBounds(30, 75, 522, 195);
 		borderLine1.setBorder(bb);
 
-		bookSearchTable1();
+		bookSearchTable("all", "all");
 		bookInfomation();
 
-	}
+		JLabel bookInfo = new JLabel("도서정보관리");
+		JLabel infoBookCode = new JLabel("책코드");
+		JLabel infoBookName = new JLabel("책이름");
+		JLabel infoWriter = new JLabel("저자");
+		JLabel infoPublisher = new JLabel("출판사");
+		JLabel infoPosition = new JLabel("위치");
+		JLabel infoLabel = new JLabel("※책코드는 수정이 불가능합니다.");
+		Button modifyBt = new Button("책정보수정");
+		Button addBt = new Button("책추가");
+		Button deleteBt = new Button("책폐기");
+		Button nullBt = new Button("초기화");
 
-	public void bookSearchTable1() {
-		list = dao.list1(code, table);
-		String[] field = { "책코드", "책이름", "저자", "출판사", "위치", "반납예상일" };
-		tb1.setSize(200, 200);
-		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tb1.addMouseListener(this);
-		col = new DefaultTableModel(field, 0);
-		for (BookVo vo : list) {
-			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getPosition(),
-					vo.getbReturn() };
-			col.addRow(row);
-		}
-		tb1.setModel(col);
-		add(listScroll);
-		listScroll.setBounds(35, 80, 512, 185);
-	}
-
-	public void bookSearchTable2(String code, String table) {
-		this.code = code;
-		this.table = table;
-		list = dao.list1(code, table);
-		String[] field = { "책코드", "책이름", "저자", "출판사", "위치", "반납예상일" };
-		tb1.setSize(200, 200);
-		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tb1.addMouseListener(this);
-		col = new DefaultTableModel(field, 0);
-		for (BookVo vo : list) {
-			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getPosition(),
-					vo.getbReturn() };
-			col.addRow(row);
+		search = new JTextField[5];
+		for (int i = 0; i < search.length; i++) {
+			search[i] = new JTextField();
+			add(search[i]);
+			search[i].setFont(font3);
 		}
 
-		tb1.setModel(col);
-		add(listScroll);
-		listScroll.setBounds(35, 80, 512, 185);
-	}
-
-	public void bookInfomation() {
-		bookInfo = new JLabel("도서정보관리");
-		infoBookCode = new JLabel("책코드");
-		infoBookName = new JLabel("책이름");
-		infoWriter = new JLabel("저자");
-		infoPublisher = new JLabel("출판사");
-		infoPosition = new JLabel("위치");
-		infoLabel = new JLabel("※책코드는 수정이 불가능합니다.");
-		modifyBt = new Button("책정보수정");
-		addBt = new Button("책추가");
-		deleteBt = new Button("책폐기");
-		nullBt = new Button("초기화");
-		inpBookCode = new JTextField();
-		inpBookName = new JTextField();
-		inpWriter = new JTextField();
-		inpPublisher = new JTextField();
 		positionA = new Choice();
 		positionB = new Choice();
-		borderLine2 = new JLabel();
+		JLabel borderLine2 = new JLabel();
 		inpImage = new JLabel();
-		imgAddBt = new Button("이미지첨부");
+		Button imgAddBt = new Button("이미지첨부");
 
 		add(bookInfo);
 		add(infoBookCode);
@@ -170,10 +124,6 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		add(modifyBt);
 		add(addBt);
 		add(deleteBt);
-		add(inpBookCode);
-		add(inpBookName);
-		add(inpWriter);
-		add(inpPublisher);
 		add(positionA);
 		add(positionB);
 		add(imgAddBt);
@@ -189,26 +139,23 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 
 		infoBookCode.setBounds(45, 329, 50, 15);
 		infoBookCode.setFont(font2);
-		inpBookCode.setBounds(90, 325, 100, 25);
-		inpBookCode.setFont(font3);
-		inpBookCode.setEnabled(false);
-		inpBookCode.setText(getNewCode());
+		search[0].setBounds(90, 325, 100, 25);
+		search[0].setEnabled(false);
+		search[0].setText(getNewCode());
 
 		infoBookName.setBounds(205, 329, 50, 15);
 		infoBookName.setFont(font2);
-		inpBookName.setBounds(250, 325, 100, 25);
-		inpBookName.setFont(font3);
+		search[1].setBounds(250, 325, 100, 25);
 
 		infoWriter.setBounds(55, 379, 30, 15);
 		infoWriter.setFont(font2);
-		inpWriter.setBounds(90, 375, 100, 25);
-		inpWriter.setFont(font3);
+		search[2].setBounds(90, 375, 100, 25);
 
 		infoPublisher.setBounds(205, 379, 50, 15);
 		infoPublisher.setFont(font2);
-		inpPublisher.setBounds(250, 375, 100, 25);
-		inpPublisher.setFont(font3);
+		search[3].setBounds(250, 375, 100, 25);
 
+		search[4].setBounds(155, 37, 200, 30);
 		infoLabel.setBounds(55, 350, 150, 10);
 		infoLabel.setFont(new Font("맑은고딕", Font.PLAIN, 9));
 		infoPosition.setBounds(55, 429, 30, 15);
@@ -248,6 +195,29 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 
 		nullBt.setBounds(35, 280, 50, 25);
 		nullBt.addActionListener(this);
+
+	}
+
+	public void bookSearchTable(String code, String table) {
+		list = dao.list1(code, table);
+		String[] field = { "책코드", "책이름", "저자", "출판사", "위치", "반납예상일" };
+		tb1.setSize(200, 200);
+		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tb1.addMouseListener(this);
+		col = new DefaultTableModel(field, 0);
+		for (BookVo vo : list) {
+			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getPosition(),
+					vo.getbReturn() };
+			col.addRow(row);
+		}
+
+		tb1.setModel(col);
+		add(listScroll);
+		listScroll.setBounds(35, 80, 512, 185);
+	}
+
+	public void bookInfomation() {
+
 	}
 
 	public void infoDialog(String s) {
@@ -268,7 +238,6 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		dia.add(infoButton);
 		dia.setLayout(null);
 		dia.setBounds(screenSize.width / 2 - 150, screenSize.height / 2 - 75, 300, 150);
-		infoDia.setFont(font3);
 		infoButton.setBounds(125, 102, 60, 25);
 		infoDia.setText(s);
 		infoButton.addActionListener(this);
@@ -319,18 +288,18 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		list = dao.list1("all", "all");
-		String code1 = inpBookCode.getText();
-		String name1 = inpBookName.getText();
-		String writer1 = inpWriter.getText();
-		String publisher1 = inpPublisher.getText();
+		String code1 = search[0].getText();
+		String name1 = search[1].getText();
+		String writer1 = search[2].getText();
+		String publisher1 = search[3].getText();
 		String position1 = positionA.getSelectedItem() + "-" + positionB.getSelectedItem();
 		String imglink1 = imglink;
 
 		if (e.getActionCommand().equals("초기화")) {
-			inpBookCode.setText(getNewCode());
-			inpBookName.setText("");
-			inpWriter.setText("");
-			inpPublisher.setText("");
+			search[0].setText(getNewCode());
+			search[1].setText("");
+			search[2].setText("");
+			search[3].setText("");
 			positionA.select(0);
 			positionB.select(0);
 			inpImage.setIcon(null);
@@ -349,22 +318,13 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 				imglink1 = "";
 			}
 			try {
-				if (code1.length() > 12) {
-					infoDialog("책코드는 11자 이내로 입력해주세요.");
-				} else if (name1.length() == 0) {
+				if (name1.length() == 0) {
 					infoDialog("책이름을 입력해주세요.");
 				} else if (writer1.length() == 0) {
 					infoDialog("저자를 입력해주세요.");
 				} else if (publisher1.length() == 0) {
 					infoDialog("출판사를 입력해주세요.");
 				} else {
-					System.out.println("-----------------");
-					System.out.println(code1);
-					System.out.println(name1);
-					System.out.println(writer1);
-					System.out.println(publisher1);
-					System.out.println(position1);
-					System.out.println(imglink1);
 					list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 0);
 					infoDialog("책 수정이 완료되었습니다.");
 				}
@@ -372,14 +332,14 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 				ee.printStackTrace();
 				infoDialog("책을 수정할 수 없습니다.");
 			}
-			bookSearchTable2("all", "all");
-			tb1.setVisible(true);
+//			bookSearchTable("all", "all");
+//			tb1.setVisible(true);
 		}
 		if (e.getActionCommand().equals("확인")) {
 			dia.dispose();
 		}
+		tb1.setVisible(false);
 		if (e.getActionCommand().equals("책추가")) {
-			tb1.setVisible(false);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getCode().equals(code1)) {
 					infoDialog("같은 책 코드가 이미 존재합니다.");
@@ -400,24 +360,17 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 			} else if (publisher1.length() == 0) {
 				infoDialog("출판사를 입력해주세요.");
 			} else {
-				System.out.println("-----------------");
-				System.out.println(code1);
-				System.out.println(name1);
-				System.out.println(writer1);
-				System.out.println(publisher1);
-				System.out.println(position1);
-				System.out.println(imglink1);
 				list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 1);
 				infoDialog("책 추가가 완료되었습니다.");
-				inpBookCode.setText("");
-				inpBookName.setText("");
-				inpWriter.setText("");
-				inpPublisher.setText("");
+				search[0].setText("");
+				search[1].setText("");
+				search[2].setText("");
+				search[3].setText("");
 				positionA.select(0);
 				positionB.select(0);
 				inpImage.setIcon(null);
 			}
-			bookSearchTable2("all", "all");
+			bookSearchTable("all", "all");
 		}
 		if (e.getActionCommand().equals("책폐기")) {
 			list = dao.list1(code1, "책코드");
@@ -426,13 +379,11 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 			} else {
 				infoWainingDia();
 			}
-
 		}
 
 		if (e.getActionCommand().equals("삭제하기")) {
 			tb1.setVisible(false);
 			list = dao.list1(code1, "책코드");
-			System.out.println(list.get(0));
 			if (code1.length() == 0) {
 				dia.dispose();
 				infoDialog("책 코드를 입력해주세요.");
@@ -441,10 +392,10 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 					list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 2);
 					dia.dispose();
 					infoDialog("책 삭제가 완료되었습니다.");
-					inpBookCode.setText("");
-					inpBookName.setText("");
-					inpWriter.setText("");
-					inpPublisher.setText("");
+					search[0].setText("");
+					search[1].setText("");
+					search[2].setText("");
+					search[3].setText("");
 					positionA.select(0);
 					positionB.select(0);
 					inpImage.setIcon(null);
@@ -461,21 +412,21 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 		if (e.getActionCommand().equals("취소하기")) {
 			dia.dispose();
 		}
-		bookSearchTable2("all", "all");
+		bookSearchTable("all", "all");
 
 		if (e.getActionCommand().equals("검색")) {
-			String seachText = inpBookSearch.getText();
+			String seachText = search[4].getText();
 			tb1.setVisible(false);
-			if (inpBookSearch.getText().length() != 0 && bookcode.getState()) {
-				bookSearchTable2(seachText, "책코드");
-			} else if (inpBookSearch.getText().length() != 0 && bookname.getState()) {
-				bookSearchTable2(seachText, "책이름");
-			} else if (inpBookSearch.getText().length() != 0 && bookwriter.getState()) {
-				bookSearchTable2(seachText, "저자");
-			} else if (inpBookSearch.getText().length() != 0 && publisher.getState()) {
-				bookSearchTable2(seachText, "출판사");
+			if (seachText.length() != 0 && bookcode.getState()) {
+				bookSearchTable(seachText, "책코드");
+			} else if (seachText.length() != 0 && bookname.getState()) {
+				bookSearchTable(seachText, "책이름");
+			} else if (seachText.length() != 0 && bookwriter.getState()) {
+				bookSearchTable(seachText, "저자");
+			} else if (seachText.length() != 0 && publisher.getState()) {
+				bookSearchTable(seachText, "출판사");
 			} else {
-				bookSearchTable2("all", "all");
+				bookSearchTable("all", "all");
 			}
 		}
 
@@ -485,18 +436,14 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(tb1.getSelectedRow() + ":" + tb1.getSelectedColumn());
-		System.out.println(tb1.getValueAt(tb1.getSelectedRow(), tb1.getSelectedColumn()));
-		System.out.println(list.get(tb1.getSelectedRow()).getImgLink());
-
 		String position = list.get(tb1.getSelectedRow()).getPosition();
 		String p1 = String.valueOf(position.charAt(0));
 		String p2 = String.valueOf(position.charAt(2));
 
-		inpBookCode.setText(list.get(tb1.getSelectedRow()).getCode());
-		inpBookName.setText(list.get(tb1.getSelectedRow()).getName());
-		inpWriter.setText(list.get(tb1.getSelectedRow()).getWriter());
-		inpPublisher.setText(list.get(tb1.getSelectedRow()).getPublisher());
+		search[0].setText(list.get(tb1.getSelectedRow()).getCode());
+		search[1].setText(list.get(tb1.getSelectedRow()).getName());
+		search[2].setText(list.get(tb1.getSelectedRow()).getWriter());
+		search[3].setText(list.get(tb1.getSelectedRow()).getPublisher());
 		positionA.select(p1);
 		positionB.select(p2);
 		imglink = list.get(tb1.getSelectedRow()).getImgLink();

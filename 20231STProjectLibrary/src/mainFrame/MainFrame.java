@@ -15,12 +15,9 @@ import login.MemberVo;
 
 public class MainFrame extends WindowAdapter {
 	private JFrame main;
-	private JTabbedPane tab;
 	private MemberVo userInfo;
-	private FileDialog fileOpen;
 
 	public MainFrame() {
-
 	}
 
 	public MainFrame(MemberVo userInfo) {
@@ -31,7 +28,7 @@ public class MainFrame extends WindowAdapter {
 		main = new JFrame("도서 대여 반납 시스템");
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
-		tab = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tab = new JTabbedPane(JTabbedPane.TOP);
 		MainMenu m1 = new MainMenu(userInfo);
 
 		main.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
@@ -55,14 +52,10 @@ public class MainFrame extends WindowAdapter {
 			tab.addTab("도서검색 및 대여/반납", m2);
 			tab.addTab("회원정보", m3);
 		}
-
-		System.out.println(userInfo.getId());
-		System.out.println(userInfo.getName());
-
 	}
 
 	public String getFileDialog() {
-		fileOpen = new FileDialog(main, "File Open", FileDialog.LOAD);
+		FileDialog fileOpen = new FileDialog(main, "File Open", FileDialog.LOAD);
 		fileOpen.setDirectory("C:\\Windows");
 		fileOpen.setVisible(true);
 		String filelink = fileOpen.getDirectory() + fileOpen.getFile();
