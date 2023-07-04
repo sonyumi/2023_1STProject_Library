@@ -235,6 +235,7 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 						inpNumber.setEnabled(false);
 						inpEmail.setEnabled(false);
 						infoDia("회원정보수정이 완료되었습니다.");
+						return;
 					}
 					infoDia("회원정보수정에 실패하었습니다.");
 				} else {

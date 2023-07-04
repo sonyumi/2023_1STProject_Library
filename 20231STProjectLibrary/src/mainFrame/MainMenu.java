@@ -65,7 +65,7 @@ public class MainMenu extends JPanel implements ActionListener {
 				if (i > 1) {
 					list = dao.list(day);
 				} else {
-					
+
 					break;
 				}
 			}
