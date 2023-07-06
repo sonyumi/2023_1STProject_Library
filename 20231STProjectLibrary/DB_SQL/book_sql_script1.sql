@@ -15,6 +15,9 @@ CREATE TABLE manager
  CONSTRAINT manager_pk PRIMARY KEY (id)
 );
 
+INSERT INTO manager (id,pw,name,gender,birth,p_number,email)
+VALUES ('super','super','관리자','여','001004','01012345678','null');
+
 CREATE TABLE g_user
 (
  id varchar2(20) NOT NULL,
@@ -26,6 +29,9 @@ CREATE TABLE g_user
  email varchar2(40),
  CONSTRAINT g_user_pk PRIMARY KEY (id)
 );
+
+INSERT INTO g_user (id,pw,name,gender,birth,p_number,email)
+VALUES ('test1','1234','커비','여','901004','01012345678','test1@gmail.com');
 
 CREATE TABLE booklist
 (
@@ -62,8 +68,6 @@ VALUES ('A2023061215','객체지향프로그래밍','변상용','홍릉과학출
 INSERT INTO booklist (book_code,book_name,writer,publisher,POSITION,image)
 VALUES ('A2023061305','베테랑의공부','임종령','콘텍트','A-2','..\20231STProjectLibrary\img\bookDBimage\pro_study.png');
 
-INSERT INTO booklist (book_code,book_name,writer,publisher,POSITION,image)
-VALUES ('A2023061306','베테랑의공부','임종령','콘텍트','A-2','..\20231STProjectLibrary\img\bookDBimage\pro_study.png');
 
 INSERT INTO booklist (book_code,book_name,writer,publisher,POSITION,image)
 VALUES ('A2023062001','이것이자바다','신용권,임경균','한빛미디어','D-6','..\20231STProjectLibrary\img\bookDBimage\thisisjava.png');
@@ -84,3 +88,27 @@ CREATE TABLE rental
 
 CREATE SEQUENCE num1 START WITH 1 
 INCREMENT BY 1 MAXVALUE 99999 NOCYCLE nocache;
+
+INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)
+VALUES (num1.nextval,'A2023053011','test1',sysdate,'14');
+
+INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)
+VALUES (num1.nextval,'A2023061305','test1',sysdate,'14');
+
+INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)
+VALUES (num1.nextval,'A2023061001','test1',sysdate,'14');
+
+INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)
+VALUES (num1.nextval,'A2023053013','test1',sysdate,'14');
+
+INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)
+VALUES (num1.nextval,'A2023061215','test1',sysdate,'14');
+
+INSERT INTO rental (rental_code,book_code,rental_user,rental_date,rental_days)
+VALUES (num1.nextval,'A2023061212','test1',sysdate,'14');
+
+UPDATE rental SET return_date=SYSDATE WHERE book_code='A2023061305';
+
+UPDATE rental SET return_date=SYSDATE WHERE book_code='A2023061001';
+
+UPDATE rental SET return_date=SYSDATE WHERE book_code='A2023053011';
