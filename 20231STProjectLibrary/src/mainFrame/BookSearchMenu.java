@@ -392,7 +392,7 @@ public class BookSearchMenu extends JPanel implements ActionListener, MouseListe
 					list = dao.list(code1, name1, writer1, publisher1, position1, imglink1, 2);
 					dia.dispose();
 					infoDialog("책 삭제가 완료되었습니다.");
-					search[0].setText("");
+					search[0].setText(getNewCode());
 					search[1].setText("");
 					search[2].setText("");
 					search[3].setText("");
