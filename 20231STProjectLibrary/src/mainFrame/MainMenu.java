@@ -67,7 +67,7 @@ public class MainMenu extends JPanel implements ActionListener {
 		}
 
 		userText.setText(userInfo.getName() + " 님 어서오세요 :D");
-		userText.setBounds(400, 20, 165, 15);
+		userText.setBounds(375, 20, 210, 15);
 		userText.setFont(font2);
 
 		bestBookText.setBounds(50, 100, 210, 30);

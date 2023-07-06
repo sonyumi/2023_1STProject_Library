@@ -25,16 +25,14 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 	private JPasswordField insPw;
 	private Checkbox manager;
 	private Button bLogin, infoButton;
-	private JButton join, grid1, idFind, grid2, pwFind;
+	private JButton join, idFind, pwFind;
 	private MemberDAO dao;
-	private JLabel mainTitle, idText, pwText, imgArea, infoDia;
-	private Font font1, font2, font3;
 	private Dialog dia;
 	public static String ID, PW;
-	private String img = "..\\20231STProjectLibrary\\img\\loginimg.png";
 	public static String icon = "..\\20231STProjectLibrary\\img\\mainicon.png";
 
 	public void setLoginFrame() {
+
 		dao = new MemberDAO();
 		login = new JFrame("Library Integration System Login");
 		insId = new JTextField();
@@ -42,17 +40,19 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 		manager = new Checkbox("관리자");
 		bLogin = new Button("Login");
 		join = new JButton("회원가입");
-		grid1 = new JButton();
-		grid2 = new JButton();
+		JButton grid1 = new JButton();
+		JButton grid2 = new JButton();
 		idFind = new JButton("아이디찾기");
 		pwFind = new JButton("비밀번호찾기");
-		mainTitle = new JLabel("도서관 대여/반납 시스템");
-		idText = new JLabel("ID");
-		pwText = new JLabel("PW");
-		imgArea = new JLabel();
-		font1 = new Font("고딕", Font.PLAIN, 20);
-		font2 = new Font("고딕", Font.PLAIN, 15);
-		font3 = new Font("고딕", Font.PLAIN, 13);
+		JLabel mainTitle = new JLabel("도서관 대여/반납 시스템");
+		JLabel idText = new JLabel("ID");
+		JLabel pwText = new JLabel("PW");
+		JLabel imgArea = new JLabel();
+		Font font1 = new Font("고딕", Font.PLAIN, 20);
+		Font font2 = new Font("고딕", Font.PLAIN, 15);
+		Font font3 = new Font("고딕", Font.PLAIN, 13);
+
+		String img = "..\\20231STProjectLibrary\\img\\loginimg.png";
 
 //		font = new Font("고딕", Font.PLAIN, 30);
 		login.setIconImage(new ImageIcon(icon).getImage());
@@ -132,10 +132,10 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 	public void LoginDialog(String s) {
 		dia = new Dialog(login, "Info", true);
 		dia.addWindowListener(this);
-		infoDia = new JLabel();
+		JLabel infoDia = new JLabel();
 		infoDia.setBounds(55, 50, 185, 30);
 		infoDia.setText(s);
-		infoDia.setFont(font3);
+//		infoDia.setFont(font3);
 		infoButton = new Button("확인");
 		dia.setLayout(null);
 		infoButton.setBounds(125, 102, 50, 25);
@@ -191,7 +191,7 @@ public class LoginFrame extends WindowAdapter implements ActionListener {
 
 			if (tfid.equals(id)) {
 				if (tfpw.equals(pw)) {
-					if(tfid.equals("super")) {
+					if (tfid.equals("super")) {
 						this.login.dispose();
 						MainFrame mf = new MainFrame(data);
 						mf.getMainFrame();

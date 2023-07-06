@@ -35,67 +35,58 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 
 	private JTable tb1 = new JTable();
 	private JTable tb2 = new JTable();
-	private DefaultTableModel col;
 	private JScrollPane listScroll1 = new JScrollPane(tb1);
 	private JScrollPane listScroll2 = new JScrollPane(tb2);
 	private BookDAO dao = new BookDAO();
 	private UserBookDAO userDao = new UserBookDAO();
 	private MemberVo userInfo;
 	private JTextField inpSearch, inpbookCode;
-	private Button searchBt, rentalBt, infoCloseBt, diaBt, mapBt, mapInfoCloseBt;
-	private JLabel search, info, voidLabel, borderLine1, borderLine2, infoImg, diaInfo, infoMapImg;
-	private CheckboxGroup searchGroup, bookGroup;
-	private Checkbox bookcode, bookname, bookwriter, publisher, rentalBook, returnBook;
-	private Font font1, font2;
+	private Button infoCloseBt, diaBt, mapInfoCloseBt;
+	private Checkbox[] searchBox; // 0=bookCode, 1=bookName, 2=bookWriter, 3=publisher
+	private Checkbox rentalBook, returnBook;
 	private LineBorder bb = new LineBorder(Color.black, 1, true);
 	private ArrayList<BookVo> list1;
-	private JFrame infoFrame = new JFrame("Map Info");
-	private JFrame infoMapFrame;
+	private JFrame infoFrame = new JFrame("BookInfo");
+	private JFrame infoMapFrame = new JFrame("Map Info");
 	private Dialog dia;
 	private Toolkit tk = Toolkit.getDefaultToolkit();
 	private Dimension screenSize = tk.getScreenSize();
 
 	RentalReturnMenu(MemberVo userInfo) {
-		tk = Toolkit.getDefaultToolkit();
-		screenSize = tk.getScreenSize();
 		this.userInfo = userInfo;
 		setLayout(null);
 		setsearchPanel();
-		setSearchTable1();
-		rentalPanel();
+		SearchTable("all", 0);
 		rentalTable();
 	}
 
 	public void setsearchPanel() {
-		searchGroup = new CheckboxGroup();
-		search = new JLabel("도서검색");
-		mapBt = new Button("위치확인");
-		bookcode = new Checkbox("책코드", searchGroup, true);
-		bookname = new Checkbox("책이름", searchGroup, true);
-		bookwriter = new Checkbox("저자", searchGroup, true);
-		publisher = new Checkbox("출판사", searchGroup, true);
+		CheckboxGroup searchGroup = new CheckboxGroup();
+		JLabel search = new JLabel("도서검색");
+		Button mapBt = new Button("위치확인");
 		inpSearch = new JTextField();
-		searchBt = new Button("검색");
-		font1 = new Font("고딕", Font.BOLD, 15);
+		Button searchBt = new Button("검색");
+		Font font1 = new Font("고딕", Font.BOLD, 15);
+		String[] box = { "책코드", "책이름", "저자", "출판사" };
+		searchBox = new Checkbox[4];
+		for (int i = 0; i < searchBox.length; i++) {
+			searchBox[i] = new Checkbox(box[i], searchGroup, true);
+			add(searchBox[i]);
+		}
 
 		add(inpSearch);
 		add(searchBt);
 		inpSearch.setBounds(105, 35, 150, 30);
-		borderLine1 = new JLabel();
+		JLabel borderLine1 = new JLabel();
 
 		add(search);
 		search.setBounds(30, 42, 90, 16);
 		search.setFont(font1);
 
-		add(bookcode);
-		add(bookname);
-		add(bookwriter);
-		add(publisher);
-
-		bookcode.setBounds(60, 15, 50, 12);
-		bookname.setBounds(120, 15, 50, 12);
-		bookwriter.setBounds(180, 15, 40, 12);
-		publisher.setBounds(230, 15, 50, 12);
+		searchBox[0].setBounds(60, 15, 50, 12);
+		searchBox[1].setBounds(120, 15, 50, 12);
+		searchBox[2].setBounds(180, 15, 40, 12);
+		searchBox[3].setBounds(230, 15, 50, 12);
 
 		add(searchBt);
 		searchBt.setBounds(260, 35, 50, 30);
@@ -109,62 +100,20 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		borderLine1.setBorder(bb);
 		borderLine1.setBounds(30, 75, 510, 205);
 
-	}
-
-	public void setSearchTable1() {
-		String[] field1 = { "책코드", "책이름", "저자", "출판사", "위치", "대여가능여부" };
-		String inp = "all";
-		int code = 0;
-		tb1.setBounds(35, 80, 500, 195);
-		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tb1.addMouseListener(this);
-		list1 = dao.list(inp, code);
-		col = new DefaultTableModel(field1, 0);
-		for (BookVo vo : list1) {
-			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getPosition(),
-					vo.getbReturn() };
-			col.addRow(row);
-		}
-		tb1.setModel(col);
-		add(listScroll1);
-		listScroll1.setBounds(35, 80, 500, 195);
-	}
-
-	public void setSearchTable2(String inp, int code) {
-		String[] field1 = { "책코드", "책이름", "저자", "출판사", "위치", "대여가능여부" };
-		tb1.setSize(200, 200);
-		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tb1.addMouseListener(this);
-		list1 = dao.list(inp, code);
-		col = new DefaultTableModel(field1, 0);
-		add(listScroll1);
-		listScroll1.setBounds(35, 80, 500, 195);
-		for (BookVo bo : list1) {
-			Object[] row = { bo.getCode(), bo.getName(), bo.getWriter(), bo.getPublisher(), bo.getPosition(),
-					bo.getbReturn() };
-			col.addRow(row);
-		}
-		tb1.setModel(col);
-
-	}
-
-	public void rentalPanel() {
 		inpbookCode = new JTextField();
-		rentalBt = new Button("확인");
-		borderLine2 = new JLabel();
-//		returnBt = new Button("반납");
-		info = new JLabel();
-		voidLabel = new JLabel("대여반납");
-		bookGroup = new CheckboxGroup();
+		Button rentalBt = new Button("확인");
+		JLabel borderLine2 = new JLabel();
+		JLabel info = new JLabel();
+		JLabel voidLabel = new JLabel("대여반납");
+		CheckboxGroup bookGroup = new CheckboxGroup();
 		rentalBook = new Checkbox("대여", bookGroup, true);
 		returnBook = new Checkbox("반납", bookGroup, true);
-		font2 = new Font("맑은고딕", Font.PLAIN, 12);
+		Font font2 = new Font("맑은고딕", Font.PLAIN, 12);
 		add(rentalBook);
 		add(returnBook);
 		add(info);
 		add(inpbookCode);
 		add(rentalBt);
-//		add(returnBt);
 		add(voidLabel);
 		add(borderLine2);
 		borderLine2.setBorder(bb);
@@ -179,14 +128,31 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		rentalBt.addActionListener(this);
 		voidLabel.setBounds(32, 325, 90, 16);
 		voidLabel.setFont(font1);
-//		returnBt.setBounds(315, 295, 50, 30);
+
+	}
+
+	public void SearchTable(String inp, int code) {
+		String[] field1 = { "책코드", "책이름", "저자", "출판사", "위치", "대여가능여부" };
+		tb1.setSize(200, 200);
+		tb1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tb1.addMouseListener(this);
+		list1 = dao.list(inp, code);
+		DefaultTableModel col = new DefaultTableModel(field1, 0);
+		add(listScroll1);
+		listScroll1.setBounds(35, 80, 500, 195);
+		for (BookVo bo : list1) {
+			Object[] row = { bo.getCode(), bo.getName(), bo.getWriter(), bo.getPublisher(), bo.getPosition(),
+					bo.getbReturn() };
+			col.addRow(row);
+		}
+		tb1.setModel(col);
 
 	}
 
 	public void rentalTable() {
 		ArrayList<BookVo> list = userDao.list(userInfo);
 		String[] field2 = { "책번호", "책이름", "저자", "출판사", "대여일", "대여일수" };
-		col = new DefaultTableModel(field2, 0);
+		DefaultTableModel col = new DefaultTableModel(field2, 0);
 		tb2.setSize(200, 200);
 		for (BookVo vo : list) {
 			Object[] row = { vo.getCode(), vo.getName(), vo.getWriter(), vo.getPublisher(), vo.getRental(),
@@ -201,11 +167,11 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 	}
 
 	// 검색 테이블 클릭시 책 이미지 프레임
-	public void bookInfo(int i) {
+	public void bookInfo(String imglink) {
 		infoFrame = new JFrame("BookInfo");
 		infoCloseBt = new Button("닫기");
-		infoImg = new JLabel("");
-		ImageIcon img = new ImageIcon(list1.get(i).getImgLink());
+		JLabel infoImg = new JLabel("");
+		ImageIcon img = new ImageIcon(imglink);
 		Image icon = img.getImage();
 		Image changeImg = icon.getScaledInstance(125, 190, Image.SCALE_SMOOTH);
 		infoImg.setIcon(new ImageIcon(changeImg));
@@ -215,6 +181,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		infoFrame.add(infoCloseBt);
 		infoCloseBt.setBounds(70, 225, 50, 20);
 		infoCloseBt.addActionListener(this);
+		infoCloseBt.setActionCommand("BookImgClose");
 		infoFrame.setLayout(null);
 		infoFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -229,9 +196,8 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 	}
 
 	public void mapInfo() {
-		infoMapFrame = new JFrame("Map Info");
 		mapInfoCloseBt = new Button("닫기");
-		infoMapImg = new JLabel("");
+		JLabel infoMapImg = new JLabel("");
 		String imglink = "..\\20231STProjectLibrary\\img\\map.png";
 		infoMapImg.setIcon(new ImageIcon(imglink));
 		infoMapFrame.setLocation(screenSize.width / 2 + 200, screenSize.height / 2 - 300);
@@ -240,6 +206,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		infoMapFrame.add(mapInfoCloseBt);
 		mapInfoCloseBt.setBounds(132, 305, 50, 20);
 		mapInfoCloseBt.addActionListener(this);
+		mapInfoCloseBt.setActionCommand("MapImgClose");
 		infoMapFrame.setLayout(null);
 		infoMapFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -248,7 +215,6 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 				}
 			}
 		});
-		// infoMapFrame.setResizable(false);
 		infoMapImg.setBounds(0, 0, 300, 300);
 		infoMapFrame.setVisible(true);
 	}
@@ -257,7 +223,7 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 	public void bookRentalDialog(String s) {
 		dia = new Dialog(dia);
 		diaBt = new Button("닫기");
-		diaInfo = new JLabel(s);
+		JLabel diaInfo = new JLabel(s);
 		dia.add(diaBt);
 		dia.setTitle("Info");
 		dia.add(diaInfo);
@@ -266,11 +232,12 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 		dia.setLayout(null);
 		dia.setBounds(screenSize.width / 2 - 150, screenSize.height / 2 - 75, 300, 150);
 		diaBt.addActionListener(this);
+		diaBt.setActionCommand("DialogClose");
 		diaBt.setBounds(125, 102, 50, 25);
 		diaInfo.setBounds(35, 50, 225, 30);
 		dia.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				if (e.getComponent() == infoFrame) {
+				if (e.getComponent() == dia) {
 					dia.dispose();
 				}
 			}
@@ -281,37 +248,41 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("위치확인")) {
-			mapInfo();
+			if (infoMapFrame.isShowing()) {
+				infoMapFrame.dispose();
+				mapInfo();
+			} else {
+				mapInfo();
+			}
+
 		}
 
 		if (e.getActionCommand().equals("검색")) {
 			String seachText = inpSearch.getText();
 			tb1.setVisible(false);
-			if (inpSearch.getText().length() != 0 && bookcode.getState()) {
-				setSearchTable2(seachText, 1);
-			} else if (inpSearch.getText().length() != 0 && bookname.getState()) {
-				setSearchTable2(seachText, 2);
-			} else if (inpSearch.getText().length() != 0 && bookwriter.getState()) {
-				setSearchTable2(seachText, 3);
-			} else if (inpSearch.getText().length() != 0 && publisher.getState()) {
-				setSearchTable2(seachText, 4);
+			if (inpSearch.getText().length() != 0 && searchBox[0].getState()) {
+				SearchTable(seachText, 1);
+			} else if (inpSearch.getText().length() != 0 && searchBox[1].getState()) {
+				SearchTable(seachText, 2);
+			} else if (inpSearch.getText().length() != 0 && searchBox[2].getState()) {
+				SearchTable(seachText, 3);
+			} else if (inpSearch.getText().length() != 0 && searchBox[3].getState()) {
+				SearchTable(seachText, 4);
 			} else {
-				setSearchTable2("all", 0);
+				SearchTable("all", 0);
 			}
 
 			tb1.setVisible(true);
 		}
 
-		if (e.getActionCommand().equals("닫기")) {
-			if (e.getSource() == infoCloseBt) {
-				infoFrame.dispose();
-			}
-			if (e.getSource() == mapInfoCloseBt) {
-				infoMapFrame.dispose();
-			}
-			if (e.getSource() == diaBt) {
-				dia.dispose();
-			}
+		if (e.getActionCommand().equals("BookImgClose")) {
+			infoFrame.dispose();
+		}
+		if (e.getActionCommand().equals("MapImgClose")) {
+			infoMapFrame.dispose();
+		}
+		if (e.getActionCommand().equals("DialogClose")) {
+			dia.dispose();
 		}
 
 		if (e.getActionCommand().equals("확인")) {
@@ -338,15 +309,13 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 						bookRentalDialog("책 반납이 완료되었습니다.");
 
 					} else if (value.equals("없음")) {
-						// 북 코드값이 잘못되엇습니다 창 띄우기
+						// 대여처리가 안됐을때
 						bookRentalDialog("대여처리가 안 된 책입니다.");
 					} else {
-						System.out.println("반납실패");
 						bookRentalDialog("반납에 실패하였습니다.");
 						// 반납 실패 창 띄우기
 					}
 				}
-
 			} catch (Exception ee) {
 				bookRentalDialog("올바른 책코드값을 입력해 주세요.");
 			}
@@ -357,16 +326,13 @@ public class RentalReturnMenu extends JPanel implements ActionListener, MouseLis
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(tb1.getSelectedRow() + ":" + tb1.getSelectedColumn());
-		System.out.println(tb1.getValueAt(tb1.getSelectedRow(), tb1.getSelectedColumn()));
-
-		System.out.println(list1.get(tb1.getSelectedRow()).getImgLink());
 		int rowValue = tb1.getSelectedRow();
-		if (infoFrame.isShowing()) {
+		String imglink = list1.get(rowValue).getImgLink();
+		if (infoFrame.isVisible()) {
 			infoFrame.dispose();
-			bookInfo(rowValue);
+			bookInfo(imglink);
 		} else {
-			bookInfo(rowValue);
+			bookInfo(imglink);
 		}
 
 	}

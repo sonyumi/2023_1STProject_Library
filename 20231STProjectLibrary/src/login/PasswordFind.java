@@ -16,27 +16,25 @@ import javax.swing.JTextField;
 
 public class PasswordFind extends WindowAdapter implements ActionListener {
 	private JFrame pwFind;
-	private JLabel pwFindText, idText, nameText, numberText, infoDia1, infoDia2, infoPw;
 	private JTextField inpId, inpName, inpNumber;
 	private Button findButton, diaButton;
 	private Dialog dia;
-	private Font font, font1, font2;
 	private MemberDAO dao;
 
 	public void setPasswordFine() {
 		dao = new MemberDAO();
 		pwFind = new JFrame("ID Find");
-		pwFindText = new JLabel("비밀번호 찾기");
-		idText = new JLabel("ID");
-		nameText = new JLabel("이름");
-		numberText = new JLabel("전화번호");
+		JLabel pwFindText = new JLabel("비밀번호 찾기");
+		JLabel idText = new JLabel("ID");
+		JLabel nameText = new JLabel("이름");
+		JLabel numberText = new JLabel("전화번호");
 		inpId = new JTextField();
 		inpName = new JTextField();
 		inpNumber = new JTextField();
 		findButton = new Button("비밀번호찾기");
-		font = new Font("고딕", Font.PLAIN, 30);
-		font1 = new Font("고딕", Font.PLAIN, 17);
-		font2 = new Font("고딕", Font.PLAIN, 15);
+		Font font = new Font("고딕", Font.PLAIN, 30);
+		Font font1 = new Font("고딕", Font.PLAIN, 17);
+		Font font2 = new Font("고딕", Font.PLAIN, 15);
 
 		pwFind.setSize(300, 350);
 		pwFind.addWindowListener(this);
@@ -82,9 +80,9 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 
 	public void findDialog(String s) {
 		dia = new Dialog(pwFind, "Info", true);
-		infoPw = new JLabel();
-		infoDia1 = new JLabel();
-		infoDia2 = new JLabel();
+		JLabel infoPw = new JLabel();
+		JLabel infoDia1 = new JLabel();
+		JLabel infoDia2 = new JLabel();
 		diaButton = new Button("확인");
 		dia.add(infoPw);
 		dia.add(infoDia1);
@@ -96,21 +94,21 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 		infoDia1.setText("당신의 비밀번호는 ");
 		infoDia2.setText(" 입니다.");
 		infoPw.setText(s);
-		infoPw.setFont(font2);
 		infoDia1.setBounds(50, 40, 110, 30);
 		infoDia2.setBounds(190, 65, 50, 30);
 		infoPw.setBounds(80, 65, 50, 30);
 		diaButton.setBounds(125, 102, 50, 25);
 		diaButton.addActionListener(this);
+		diaButton.setActionCommand("로그인닫기");
 
 		dia.setVisible(true);
 	}
 
 	public void findFailDialog(String s) {
 		dia = new Dialog(pwFind, "Info", true);
-		infoPw = new JLabel();
-		infoDia1 = new JLabel();
-		infoDia2 = new JLabel();
+		JLabel infoPw = new JLabel();
+		JLabel infoDia1 = new JLabel();
+		JLabel infoDia2 = new JLabel();
 		diaButton = new Button("확인");
 		dia.add(infoPw);
 		dia.add(infoDia1);
@@ -121,9 +119,9 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 		dia.setBounds(600, 300, 300, 150);
 		infoDia2.setText(s);
 		infoDia2.setBounds(45, 55, 200, 30);
-		infoDia2.setFont(font2);
 		diaButton.setBounds(125, 102, 50, 25);
 		diaButton.addActionListener(this);
+		diaButton.setActionCommand("닫기");
 
 		dia.setVisible(true);
 	}
@@ -162,8 +160,15 @@ public class PasswordFind extends WindowAdapter implements ActionListener {
 			}
 
 		}
-		if (e.getActionCommand().equals("확인")) {
+		if (e.getActionCommand().equals("닫기")) {
 			dia.dispose();
+		}
+		if(e.getActionCommand().equals("로그인닫기")) {
+			dia.dispose();
+			LoginFrame login = new LoginFrame();
+			login.getLoginFrame();
+			pwFind.dispose();
+			
 		}
 	}
 

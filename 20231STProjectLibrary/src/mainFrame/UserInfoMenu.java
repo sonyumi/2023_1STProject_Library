@@ -22,32 +22,28 @@ import login.MemberVo;
 
 @SuppressWarnings("serial")
 public class UserInfoMenu extends JPanel implements ActionListener {
-	private JLabel userIn, userId, userPw, userName, userGender, userBirth, userNumber, userEmail, diaInfo, infomsg;
 	private JTextField inpId, inpName, inpBirth, inpNumber, inpEmail;
 	private JPasswordField inpPw;
 	private Checkbox man, woman;
-	private CheckboxGroup genderGroup;
-	private Button pwBt, endBt, diaBt;
 	private Dialog dia;
-	private Font font1, font2, font3;
 	private MemberVo userInfo;
 	private JoinDAO joinDao = new JoinDAO();
 
 	public UserInfoMenu(MemberVo userinfo) {
 		this.userInfo = userinfo;
 
-		font1 = new Font("맑은고딕", Font.BOLD, 25);
-		font2 = new Font("맑은고딕", Font.PLAIN, 20);
-		font3 = new Font("맑은고딕", Font.PLAIN, 18);
-		userIn = new JLabel("회원정보관리");
-		userId = new JLabel("ID");
-		userPw = new JLabel("PW");
-		userName = new JLabel("이름");
-		userGender = new JLabel("성별");
-		userBirth = new JLabel("생년월일");
-		userNumber = new JLabel("연락처");
-		userEmail = new JLabel("Email");
-		infomsg = new JLabel("※바뀐 비밀번호는 다음 로그인부터 적용됩니다.");
+		Font font1 = new Font("맑은고딕", Font.BOLD, 25);
+		Font font2 = new Font("맑은고딕", Font.PLAIN, 20);
+		Font font3 = new Font("맑은고딕", Font.PLAIN, 18);
+		JLabel userIn = new JLabel("회원정보관리");
+		JLabel userId = new JLabel("ID");
+		JLabel userPw = new JLabel("PW");
+		JLabel userName = new JLabel("이름");
+		JLabel userGender = new JLabel("성별");
+		JLabel userBirth = new JLabel("생년월일");
+		JLabel userNumber = new JLabel("연락처");
+		JLabel userEmail = new JLabel("Email");
+		JLabel infomsg = new JLabel("※바뀐 비밀번호는 다음 로그인부터 적용됩니다.");
 
 		inpId = new JTextField();
 		inpPw = new JPasswordField();
@@ -56,7 +52,7 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 		inpNumber = new JTextField();
 		inpEmail = new JTextField();
 
-		genderGroup = new CheckboxGroup();
+		CheckboxGroup genderGroup = new CheckboxGroup();
 
 		man = new Checkbox("남", genderGroup, true);
 		woman = new Checkbox("여", genderGroup, false);
@@ -68,8 +64,8 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 			woman.setState(true);
 		}
 
-		pwBt = new Button("비밀번호확인");
-		endBt = new Button("회원정보수정");
+		Button pwBt = new Button("비밀번호확인");
+		Button endBt = new Button("회원정보수정");
 
 		add(userIn);
 		add(userId);
@@ -213,7 +209,7 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 				if (inpNumber.getText().isEmpty()) {
 					infoDia("연락처를 입력해주세요.");
 					return;
-				} else if (inpNumber.getText().length() > 12) {
+				} else if (inpNumber.getText().length() > 11) {
 					infoDia("연락처를 11자리 이하로 입력해주세요.");
 					return;
 				} else {
@@ -252,8 +248,8 @@ public class UserInfoMenu extends JPanel implements ActionListener {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		dia = new Dialog(dia);
-		diaBt = new Button("닫기");
-		diaInfo = new JLabel(s);
+		Button diaBt = new Button("닫기");
+		JLabel diaInfo = new JLabel(s);
 		dia.add(diaBt);
 		dia.setTitle("Info");
 		dia.add(diaInfo);

@@ -7,14 +7,12 @@ import javax.swing.*;
 
 public class JoinFrame extends WindowAdapter implements ActionListener {
 	private JFrame join;
-	private JLabel joinText, idText, pwText, nameText, gText, birthText, phoneText, emailText, idInfoText1, idInfoText2,
-			idInfoText3, birInfoText, phoneNumInfo, infoDia, infoErrorDia;
+	private JLabel idInfoText1, idInfoText2, idInfoText3;
 	private JTextField insId, insName, insPhone, insBirth, insEmail;
 	private JPasswordField insPw;
 	private ButtonGroup bg;
 	private JRadioButton[] gender;
 	private Button overlapId, joinBt, infoErrorButton, infoButton;
-	private Font font, font1, font2, font3;
 	private Dialog dia, diaError;
 	private String sGender[] = { "남", "여" };
 	private MemberDAO dao;
@@ -25,16 +23,16 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		dao = new MemberDAO();
 		dao1 = new JoinDAO();
 		join = new JFrame("Welcome, Join! :D");
-		joinText = new JLabel("회원가입");
-		idText = new JLabel("*ID");
-		pwText = new JLabel("*PW");
-		nameText = new JLabel("*이름");
-		gText = new JLabel("*성별");
-		birthText = new JLabel("*생년월일");
-		phoneText = new JLabel("*전화번호");
-		emailText = new JLabel("E-Mail");
-		phoneNumInfo = new JLabel("※ - 는 제외하고 숫자만 입력해주세요.");
-		birInfoText = new JLabel("※생년월일은 6자리로 입력해주세요.");
+		JLabel joinText = new JLabel("회원가입");
+		JLabel idText = new JLabel("*ID");
+		JLabel pwText = new JLabel("*PW");
+		JLabel nameText = new JLabel("*이름");
+		JLabel gText = new JLabel("*성별");
+		JLabel birthText = new JLabel("*생년월일");
+		JLabel phoneText = new JLabel("*전화번호");
+		JLabel emailText = new JLabel("E-Mail");
+		JLabel phoneNumInfo = new JLabel("※ - 는 제외하고 숫자만 입력해주세요.");
+		JLabel birInfoText = new JLabel("※생년월일은 6자리로 입력해주세요.");
 		insId = new JTextField();
 		insPw = new JPasswordField();
 		insName = new JTextField();
@@ -51,10 +49,10 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		bg.add(gender[0]);
 		bg.add(gender[1]);
 
-		font = new Font("맑은고딕", Font.PLAIN, 30);
-		font1 = new Font("맑은고딕", Font.PLAIN, 17);
-		font2 = new Font("맑은고딕", Font.PLAIN, 15);
-		font3 = new Font("맑은고딕", Font.PLAIN, 13);
+		Font font = new Font("맑은고딕", Font.PLAIN, 30);
+		Font font1 = new Font("맑은고딕", Font.PLAIN, 17);
+		Font font2 = new Font("맑은고딕", Font.PLAIN, 15);
+		Font font3 = new Font("맑은고딕", Font.PLAIN, 13);
 
 		join.setIconImage(new ImageIcon(LoginFrame.icon).getImage());
 		join.setSize(400, 500);
@@ -168,7 +166,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 
 	public void JoinDialog(String s) {
 		dia = new Dialog(join, "Infomation", true);
-		infoDia = new JLabel();
+		JLabel infoDia = new JLabel();
 		infoButton = new Button("확인");
 		dia.setResizable(false);
 		dia.addWindowListener(this);
@@ -176,7 +174,6 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		dia.add(infoButton);
 		dia.setLayout(null);
 		dia.setBounds(600, 300, 300, 150);
-		infoDia.setFont(font3);
 		infoButton.setBounds(125, 102, 50, 25);
 		infoDia.setText(s);
 		infoButton.addActionListener(this);
@@ -186,7 +183,7 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 
 	public void JoinDialogError(String s) {
 		diaError = new Dialog(join, "Error!", true);
-		infoErrorDia = new JLabel();
+		JLabel infoErrorDia = new JLabel();
 		infoErrorButton = new Button("확인");
 		diaError.setResizable(false);
 		diaError.addWindowListener(this);
@@ -194,7 +191,6 @@ public class JoinFrame extends WindowAdapter implements ActionListener {
 		diaError.add(infoErrorButton);
 		diaError.setLayout(null);
 		diaError.setBounds(600, 300, 300, 150);
-		infoErrorDia.setFont(font3);
 		infoErrorButton.setBounds(125, 102, 50, 25);
 		infoErrorDia.setText(s);
 		infoErrorButton.addActionListener(this);
